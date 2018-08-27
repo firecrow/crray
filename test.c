@@ -70,6 +70,14 @@ int main(int argc, char **argv){
 	add(arr, &juliet);
 	printf("juliet alloc:%d length:%d\n", arr->allocated, arr->length);
 
+
+	char override[] = "override";	
+	set(arr, &override, 3);
+
+	char *bback1;
+	get(arr, 3, &bback1);
+	printf("result from set 3 :%s\n", bback1);
+
 }
 
 

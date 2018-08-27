@@ -54,6 +54,10 @@ CRRAY_IDX add(struct crray *arr, void *item){
 }
 
 enum CRRAY_STATUS set(struct crray *arr, void *item, int idx){
+	if(idx < 0 || idx > arr->length-1){
+		return CRRAY_BOUNDS_ERROR;
+	}
+	arr->items[idx] = item;
 }
 
 CRRAY_IDX add_at(struct crray *arr, void *item, int idx){
@@ -62,7 +66,7 @@ CRRAY_IDX add_at(struct crray *arr, void *item, int idx){
 		return add_at(arr, item, arr->length);
 	}
 	printf("hi 2\n");
-	if(idx > arr->length){
+	if(idx < 0 || idx > arr->length){
 		return CRRAY_BOUNDS_ERROR;
 	}
 	printf("hi 3\n");
