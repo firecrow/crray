@@ -58,26 +58,22 @@ enum CRRAY_STATUS set(struct crray *arr, void *item, int idx){
 		return CRRAY_BOUNDS_ERROR;
 	}
 	arr->items[idx] = item;
+	return CRRAY_OK;
 }
 
 CRRAY_IDX add_at(struct crray *arr, void *item, int idx){
-	printf("hi 1\n");
 	if(idx == -1){
 		return add_at(arr, item, arr->length);
 	}
-	printf("hi 2\n");
 	if(idx < 0 || idx > arr->length){
 		return CRRAY_BOUNDS_ERROR;
 	}
-	printf("hi 3\n");
 	arr->allocated = resize_if_(arr, arr->length+1);
         if(idx != arr->length){
-		printf("hi 4 not supposed to be here\n");
-		memcpy(arr->items+idx, arr->items+(idx-1), sizeof(void *)*(arr->length-idx+1));
+		memcpy(arr->items+idx+1, arr->items+idx, sizeof(void *)*(arr->length-idx));
 	}
 	arr->items[idx] = item;
 	arr->length++;
-	printf("hi 5\n");
 	return idx;
 }
 
@@ -89,8 +85,14 @@ enum CRRAY_STATUS get(struct crray *arr, int idx, void **result){
 	return CRRAY_OK;
 }
 
-enum CRRAY_STATUS pop(struct crray *arr, void *item, int idx, void **result){
-   
+enum CRRAY_STATUS pop(struct crray *arr, int idx, void **result){
+	if(idx < 0 || idx > arr->length-1){
+		return CRRAY_BOUNDS_ERROR;
+	}
+	*result = arr->items[idx];
+	memcpy(arr->items+idx, arr->items+idx+1, sizeof(void *)*(arr->length-idx));
+	arr->length--;
+	return CRRAY_OK;
 }
 
 enum CRRAY_STATUS pop_many(struct crray *arr, void *item, int idx, int size, struct crray **result){
