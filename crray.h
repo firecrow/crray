@@ -95,6 +95,16 @@ enum CRRAY_STATUS pop(struct crray *arr, int idx, void **result){
 	return CRRAY_OK;
 }
 
-enum CRRAY_STATUS pop_many(struct crray *arr, void *item, int idx, int size, struct crray **result){
-   
+enum CRRAY_STATUS pop_many(struct crray *arr, int idx, int size, struct crray **result){
+	if(idx < 0 || idx > arr->length-1-size){
+		return CRRAY_BOUNDS_ERROR;
+	}
+	struct crray *out = crray_init();
+	arr->allocated = resize_if_(arr, size);
+	memcpy(out->items, arr->items+idx, sizeof(void *)*size);
+	out->length = size;
+	*result = out;
+	memcpy(arr->items+idx, arr->items+idx+size, sizeof(void *)*(arr->length-idx));
+	arr->length -= size;
+	return CRRAY_OK;
 }

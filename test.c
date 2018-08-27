@@ -72,6 +72,11 @@ int main(int argc, char **argv){
 	pop(arr, 5, &out);
 	printf("out:%s\n", out);
 	show_arr(arr, "pop at idx 5");
+
+	struct crray *presult;
+	pop_many(arr, 2, 3, &presult);
+	show_arr(presult, "poped");
+	show_arr(arr, "pop many 3 from idx 2");
 }
 
 
