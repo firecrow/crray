@@ -27,7 +27,7 @@ int main(int argc, char **argv){
 
 	char charlie[] = "charlie"; 
 	int c = add_at(arr, &charlie, 1);
-	printf("alloc:%d length:%d\n", arr->allocated, arr->length);
+	printf("charlie alloc:%d length:%d\n", arr->allocated, arr->length);
 
 	char *aback1;
 	get(arr, 0, &aback1);
@@ -40,6 +40,35 @@ int main(int argc, char **argv){
 	char *aback3;
 	get(arr, 2, &aback3);
 	printf("result from 1 :%s\n", aback3);
+
+
+	char delta[] = "delta";
+	add(arr, &delta);
+	printf("delta alloc:%d length:%d\n", arr->allocated, arr->length);
+
+	char echo[] = "echo";
+	add(arr, &echo);
+	printf("echo alloc:%d length:%d\n", arr->allocated, arr->length);
+
+	char foxtrot[] = "foxtrot";
+	add(arr, &foxtrot);
+	printf("foxtrot alloc:%d length:%d\n", arr->allocated, arr->length);
+
+	char golf[] = "golf";
+	add(arr, &golf);
+	printf("golf alloc:%d length:%d\n", arr->allocated, arr->length);
+
+	char hotel[] = "hotel";
+	add(arr, &hotel);
+	printf("hotel alloc:%d length:%d\n", arr->allocated, arr->length);
+
+	char india[] = "india";
+	add(arr, &india);
+	printf("india alloc:%d length:%d\n", arr->allocated, arr->length);
+
+	char juliet[] = "juliet";
+	add(arr, &juliet);
+	printf("juliet alloc:%d length:%d\n", arr->allocated, arr->length);
 
 }
 

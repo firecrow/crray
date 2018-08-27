@@ -22,13 +22,13 @@ int resize_if_(struct crray *arr, int size){
 		}else{
 			newsize = size;	
 		}
-			new = (void *)malloc(sizeof(void *)*newsize);
-			if(!new){
-				printf("oops no memory\n");
-				exit(1);
-			}
+		new = (void *)malloc(sizeof(void *)*newsize);
+		if(!new){
+			printf("oops no memory\n");
+			exit(1);
+		}
 		if(arr->length != 0){
-			memcpy(new, arr->items, sizeof(void *)*arr->length);
+			memcpy(new, arr->items, sizeof(void *)*(arr->length-1));
 			free(arr->items);
 		}
 		arr->items = new;
@@ -66,7 +66,7 @@ CRRAY_IDX add_at(struct crray *arr, void *item, int idx){
 		return CRRAY_BOUNDS_ERROR;
 	}
 	printf("hi 3\n");
-	arr->allocated = resize_if_(arr, arr->length);
+	arr->allocated = resize_if_(arr, arr->length+1);
         if(idx != arr->length){
 		printf("hi 4 not supposed to be here\n");
 		memcpy(arr->items+idx, arr->items+(idx-1), sizeof(void *)*(arr->length-idx+1));
