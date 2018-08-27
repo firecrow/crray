@@ -6,10 +6,10 @@ static INITIAL_SIZE = 4;
 struct crray {
 	int length;
 	int allocated;
-	void *items[];
+	void **items;
 };
 
-enum CRRAY_STATUS = { CRRAY_OK, CRRAY_NOT_FOUND };
+enum CRRAY_STATUS { CRRAY_OK, CRRAY_NOT_FOUND };
 typedef int CRRAY_IDX;
 
 int resize_if_(struct crray *arr, int size){
@@ -22,7 +22,7 @@ int resize_if_(struct crray *arr, int size){
 	}
 	void *new = NULL;
 	if(arr->allocated < size){
-		new = malloc(sizeof(void *)*newsize);
+		new = (void *)malloc(sizeof(void *)*newsize);
 		if(!new){
 			printf("oops no memory");
 			exit(1);
@@ -37,7 +37,7 @@ int resize_if_(struct crray *arr, int size){
 }
 
 struct crray *crray_init(){
-	struct crray *arr = malloc(sizeof(struct crray));
+	struct crray *arr = (struct crray *)malloc(sizeof(struct crray));
 	if(!arr){
 		printf("oops no memory");
 		exit(1);
