@@ -1,7 +1,4 @@
-
-
-static INITIAL_SIZE = 4;
-
+static int INITIAL_SIZE = 4;
 
 struct crray {
 	int length;
@@ -27,8 +24,9 @@ int resize_if_(struct crray *arr, int size){
 			printf("oops no memory\n");
 			exit(1);
 		}
+		bzero(new, sizeof(void *)*newsize);
 		if(arr->length != 0){
-			memcpy(new, arr->items, sizeof(void *)*(arr->length-1));
+			memcpy(new, arr->items, sizeof(void *)*(arr->length));
 			free(arr->items);
 		}
 		arr->items = new;
@@ -37,28 +35,20 @@ int resize_if_(struct crray *arr, int size){
 	return arr->allocated;
 }
 
+void _crray_init(struct crray *arr){
+	arr->length = 0;
+	arr->allocated = 0;
+	arr->allocated = resize_if_(arr, INITIAL_SIZE);
+}
+
 struct crray *crray_init(){
 	struct crray *arr = (struct crray *)malloc(sizeof(struct crray));
 	if(!arr){
 		printf("oops no memory\n");
 		exit(1);
 	}
-	arr->length = 0;
-	arr->allocated = 0;
-	arr->allocated = resize_if_(arr, INITIAL_SIZE);
-	return arr;
-}
-
-CRRAY_IDX add(struct crray *arr, void *item){
-  	return add_at(arr, item, -1); 
-}
-
-enum CRRAY_STATUS set(struct crray *arr, void *item, int idx){
-	if(idx < 0 || idx > arr->length-1){
-		return CRRAY_BOUNDS_ERROR;
-	}
-	arr->items[idx] = item;
-	return CRRAY_OK;
+	_crray_init(arr);
+    return arr;
 }
 
 CRRAY_IDX add_at(struct crray *arr, void *item, int idx){
@@ -77,6 +67,19 @@ CRRAY_IDX add_at(struct crray *arr, void *item, int idx){
 	return idx;
 }
 
+
+CRRAY_IDX add(struct crray *arr, void *item){
+  	return add_at(arr, item, -1); 
+}
+
+enum CRRAY_STATUS set(struct crray *arr, void *item, int idx){
+	if(idx < 0 || idx > arr->length-1){
+		return CRRAY_BOUNDS_ERROR;
+	}
+	arr->items[idx] = item;
+	return CRRAY_OK;
+}
+
 enum CRRAY_STATUS get(struct crray *arr, int idx, void **result){
 	if(idx < 0 || idx > arr->length-1){
 		return CRRAY_BOUNDS_ERROR;
@@ -93,6 +96,17 @@ enum CRRAY_STATUS pop(struct crray *arr, int idx, void **result){
 	memcpy(arr->items+idx, arr->items+idx+1, sizeof(void *)*(arr->length-idx));
 	arr->length--;
 	return CRRAY_OK;
+}
+
+typedef int (*crray_cmp_func)(void *needle, void *item);
+void *crray_find(struct crray *arr, void *needle, crray_cmp_func cmp){
+    int i;
+    for(i=0; i < arr->length; i++){
+        if(!cmp(needle, arr->items[i])){
+            return arr->items[i];
+        }
+    }
+    return NULL;
 }
 
 enum CRRAY_STATUS pop_many(struct crray *arr, int idx, int size, struct crray **result){

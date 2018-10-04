@@ -1,13 +1,14 @@
 #include <stdio.h>
+#include "crray.inc.h"
 #include "crray.h"
 
 void show_arr(struct crray *arr, char *label){
 	printf(">'%s' alloc:%d length:%d\n", label, arr->allocated, arr->length);
 	int i;
-	char *value;
+	void *value;
 	for(i=0; i<arr->length; i++){
 		get(arr, i, &value);
-		printf("%d= %s\n", i, value);
+		printf("%d= %s\n", i, (char *)value);
 	}
 }
 
@@ -63,14 +64,14 @@ int main(int argc, char **argv){
 	set(arr, &override, 3);
 
 	show_arr(arr, "set at idx 3");
-	char *out;
+	void *out;
 	pop(arr, 2, &out);
-	printf("out:%s\n", out);
+	printf("out:%s\n", (char *)out);
 	show_arr(arr, "pop at idx 2");
 
 	show_arr(arr, "set at idx 3");
 	pop(arr, 5, &out);
-	printf("out:%s\n", out);
+	printf("out:%s\n", (char *)out);
 	show_arr(arr, "pop at idx 5");
 
 	struct crray *presult;
