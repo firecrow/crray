@@ -92,7 +92,9 @@ enum CRRAY_STATUS pop(struct crray *arr, int idx, void **result){
 	if(idx < 0 || idx > arr->length-1){
 		return CRRAY_BOUNDS_ERROR;
 	}
-	*result = arr->items[idx];
+    if(result != NULL){
+        *result = arr->items[idx];
+    }
 	memcpy(arr->items+idx, arr->items+idx+1, sizeof(void *)*(arr->length-idx));
 	arr->length--;
 	return CRRAY_OK;
