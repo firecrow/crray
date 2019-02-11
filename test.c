@@ -1,13 +1,14 @@
+#include <stdlib.h>
 #include <stdio.h>
 #include "crray.inc.h"
-#include "crray.h"
+#include "crray.c"
 
 void show_arr(struct crray *arr, char *label){
 	printf(">'%s' alloc:%d length:%d\n", label, arr->allocated, arr->length);
 	int i;
 	void *value;
 	for(i=0; i<arr->length; i++){
-		get(arr, i, &value);
+		crray_get(arr, i, &value);
 		printf("%d= %s\n", i, (char *)value);
 	}
 }
@@ -21,61 +22,61 @@ int main(int argc, char **argv){
 	char alpha[] = "alpha";
 	char bravo[] = "bravo";
 
-	int a = add(arr, &alpha);
+	int a = crray_add(arr, &alpha);
 	printf("a:%d\n", a);
-	int b = add(arr, &bravo);
+	int b = crray_add(arr, &bravo);
 	printf("b:%d\n", b);
 	printf("alloc:%d length:%d\n", arr->allocated, arr->length);
 	show_arr(arr, "two adds");
 
 	char charlie[] = "charlie"; 
-	int c = add_at(arr, &charlie, 1);
+	int c = crray_add_at(arr, &charlie, 1);
 	show_arr(arr, "add charlie at idx 1");
 
 	char delta[] = "delta";
-	add(arr, &delta);
+	crray_add(arr, &delta);
 	show_arr(arr, "+1");
 
 	char echo[] = "echo";
-	add(arr, &echo);
+	crray_add(arr, &echo);
 	show_arr(arr, "+1");
 
 	char foxtrot[] = "foxtrot";
-	add(arr, &foxtrot);
+	crray_add(arr, &foxtrot);
 	show_arr(arr, "+1");
 
 	char golf[] = "golf";
-	add(arr, &golf);
+	crray_add(arr, &golf);
 	show_arr(arr, "+1");
 
 	char hotel[] = "hotel";
-	add(arr, &hotel);
+	crray_add(arr, &hotel);
 	show_arr(arr, "+1");
 
 	char india[] = "india";
-	add(arr, &india);
+	crray_add(arr, &india);
 	show_arr(arr, "+1");
 
 	char juliet[] = "juliet";
-	add(arr, &juliet);
+	crray_add(arr, &juliet);
 	show_arr(arr, "+1");
 
 	char override[] = "override";	
-	set(arr, &override, 3);
+	crray_set(arr, &override, 3);
 
 	show_arr(arr, "set at idx 3");
 	void *out;
-	pop(arr, 2, &out);
+	crray_pop(arr, 2, &out);
 	printf("out:%s\n", (char *)out);
 	show_arr(arr, "pop at idx 2");
 
 	show_arr(arr, "set at idx 3");
-	pop(arr, 5, &out);
+	crray_pop(arr, 5, &out);
 	printf("out:%s\n", (char *)out);
 	show_arr(arr, "pop at idx 5");
 
 	struct crray *presult;
-	pop_many(arr, 2, 3, &presult);
+	crray_pop_many(arr, 2, 3, &presult);
 	show_arr(presult, "poped");
 	show_arr(arr, "pop many 3 from idx 2");
 }

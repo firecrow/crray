@@ -38,14 +38,14 @@ int crray_resize_if_(struct crray *arr, int size){
 	return arr->allocated;
 }
 
-int crray_cmp(void *item, void *search){
-    return item;
+int crray_int_cmp(void *item, void *search){
+    return *((int *)item) == *((int *)search);
 }
 
-void _crray_init(struct crray *arr, crray_cmp cmp)){
+void _crray_init(struct crray *arr, crray_cmp cmp){
 	arr->length = 0;
 	arr->allocated = 0;
-	arr->allocated = resize_if_(arr, INITIAL_SIZE);
+	arr->allocated = crray_resize_if_(arr, INITIAL_SIZE);
     arr->cmp = cmp;
 }
 
@@ -55,7 +55,7 @@ struct crray *crray_init(){
 		printf("oops no memory\n");
 		exit(1);
 	}
-	_crray_init(arr, crray_cmp);
+	_crray_init(arr, crray_int_cmp);
     return arr;
 }
 
@@ -72,12 +72,12 @@ struct crray *crray_init_cmp(crray_cmp cmp){
 
 CRRAY_IDX crray_add_at(struct crray *arr, void *item, int idx){
 	if(idx == -1){
-		return add_at(arr, item, arr->length);
+		return crray_add_at(arr, item, arr->length);
 	}
 	if(idx < 0 || idx > arr->length){
 		return CRRAY_BOUNDS_ERROR;
 	}
-	arr->allocated = resize_if_(arr, arr->length+1);
+	arr->allocated = crray_resize_if_(arr, arr->length+1);
         if(idx != arr->length){
 		memcpy(arr->items+idx+1, arr->items+idx, sizeof(void *)*(arr->length-idx));
 	}
@@ -88,7 +88,7 @@ CRRAY_IDX crray_add_at(struct crray *arr, void *item, int idx){
 
 
 CRRAY_IDX crray_add(struct crray *arr, void *item){
-  	return add_at(arr, item, -1); 
+  	return crray_add_at(arr, item, -1); 
 }
 
 enum CRRAY_STATUS crray_set(struct crray *arr, void *item, int idx){
@@ -124,13 +124,31 @@ enum CRRAY_STATUS crray_pop_many(struct crray *arr, int idx, int size, struct cr
 		return CRRAY_BOUNDS_ERROR;
 	}
 	struct crray *out = crray_init();
-	arr->allocated = resize_if_(arr, size);
+	arr->allocated = crray_resize_if_(arr, size);
 	memcpy(out->items, arr->items+idx, sizeof(void *)*size);
 	out->length = size;
 	*result = out;
 	memcpy(arr->items+idx, arr->items+idx+size, sizeof(void *)*(arr->length-idx));
 	arr->length -= size;
 	return CRRAY_OK;
+}
+
+void crray_free(struct crray *arr){
+    int i;
+    for(i=0; i < arr->length; i++){
+        free(arr->items[i]);
+    }
+    free(arr);
+}
+
+void crray_empty(struct crray * arr, int should_free){
+    if(should_free){
+        int i;
+        for(i=0; i < arr->length; i++){
+            free(arr->items[i]);
+        }
+    }
+    arr->length = 0;
 }
 
 int crray_count(struct crray *arr, void *search){
