@@ -24,7 +24,7 @@ int crray_resize_if_(struct crray *arr, int size){
 		}
 		new = (void *)malloc(sizeof(void *)*newsize);
 		if(!new){
-			printf("oops no memory\n");
+			fprintf(stderr, "oops no memory\n");
 			exit(1);
 		}
 		bzero(new, sizeof(void *)*newsize);
@@ -39,7 +39,7 @@ int crray_resize_if_(struct crray *arr, int size){
 }
 
 int crray_int_cmp(void *item, void *search){
-    return *((int *)item) == *((int *)search);
+    return *((int *)item) - *((int *)search);
 }
 
 void _crray_init(struct crray *arr, crray_cmp cmp){
@@ -52,7 +52,7 @@ void _crray_init(struct crray *arr, crray_cmp cmp){
 struct crray *crray_init(){
 	struct crray *arr = (struct crray *)malloc(sizeof(struct crray));
 	if(!arr){
-		printf("oops no memory\n");
+		fprintf(stderr, "oops no memory\n");
 		exit(1);
 	}
 	_crray_init(arr, crray_int_cmp);
@@ -62,7 +62,7 @@ struct crray *crray_init(){
 struct crray *crray_init_cmp(crray_cmp cmp){
 	struct crray *arr = (struct crray *)malloc(sizeof(struct crray));
 	if(!arr){
-		printf("oops no memory\n");
+		fprintf(stderr, "oops no memory\n");
 		exit(1);
 	}
 	_crray_init(arr, cmp);
