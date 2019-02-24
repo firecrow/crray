@@ -16,11 +16,9 @@ int _crray_cmp(void *item, void *search){
 }
 
 int crray_resize_if_(struct crray *arr, int size){
-    printf(">>>>>>>>> allocating %d\n", size);
 	int newsize;
 	char *new = NULL;
 	if(arr->allocated < size){
-        printf(">>>>>>>>>XXXXXXXXXXXXXX allocating %d\n", size);
 		if(arr->allocated > 0) {
 			newsize = arr->allocated;
 			while((newsize = newsize*2*2) < size){}
@@ -28,7 +26,6 @@ int crray_resize_if_(struct crray *arr, int size){
 			newsize = size;
 		}
 		new = (void *)malloc(arr->esizeof*newsize);
-        printf("-- zeroing out items\n");
         bzero(new, arr->esizeof*newsize);
 		if(!new){
 			fprintf(stderr, "oops no memory\n");
@@ -52,7 +49,6 @@ struct crray *crray_init(size_t esizeof){
     bzero(arr, sizeof(struct crray));
 	arr->length = 0;
     arr->esizeof = esizeof;
-    printf("orig %d\n", arr->esizeof);
 	arr->allocated = 0;
 	arr->allocated = crray_resize_if_(arr, arr->esizeof*INITIAL_SIZE);
     arr->cmp = _crray_cmp;
@@ -60,23 +56,14 @@ struct crray *crray_init(size_t esizeof){
 }
 
 int crray_set_inl(struct crray *arr, void *item, int idx){
-    printf("orig set %d\n", arr->esizeof);
 	if(idx < 0 || idx > arr->length){
 		return -1;
 	}
     memcpy(arr->items+(arr->esizeof*idx), item, arr->esizeof);
-    printf("-----------------------------------------\n");
-    printf("szeof int %d\n", sizeof(int));
-    printf("arr esizeof %d\n",  arr->esizeof);
-    printf("offset %d\n", arr->esizeof*idx);
-    printf("item value %d\n", *((int *)item));
-    printf("-----------------------------------------\n");
 	return 0;
 }
 
 int crray_add_at_inl(struct crray *arr, void *item, int idx){
-    printf("!!!!!!!!!! add at esizeof %d\n", arr->esizeof);
-    printf("crray_add_at_inl\n");
 	if(idx == -1){
 		return crray_add_at_inl(arr, item, arr->length);
 	}
@@ -85,18 +72,14 @@ int crray_add_at_inl(struct crray *arr, void *item, int idx){
 	}
 	arr->allocated = crray_resize_if_(arr, arr->esizeof*(arr->length+1));
     if(idx != arr->length){
-        printf("crray_add_at_inl moving mem\n");
         memcpy(arr->items+(arr->esizeof*(arr->length+1)), arr->items+(arr->esizeof*idx), arr->esizeof*(arr->length-idx));
 	}
-    printf("calling st\n");
     crray_set_inl(arr, item, idx);
 	arr->length++;
-    printf("%d\n", arr->length);
 	return idx;
 }
 
 int crray_add_inl(struct crray *arr, void *item){
-    printf("add %d\n", arr->esizeof);
   	return crray_add_at_inl(arr, item, -1); 
 }
 
