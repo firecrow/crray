@@ -16,6 +16,7 @@ void show_arr(struct crray *arr, char *label){
 
 int main(int argc, char **argv){
 
+/*
 	struct crray *arr = crray_init();
 	printf("alloc:%d length:%d\n", arr->allocated, arr->length);
 
@@ -79,6 +80,6 @@ int main(int argc, char **argv){
 	crray_pop_many(arr, 2, 3, &presult);
 	show_arr(presult, "poped");
 	show_arr(arr, "pop many 3 from idx 2");
+*/
 }
-
 
