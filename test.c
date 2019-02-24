@@ -1,8 +1,10 @@
 #include <stdlib.h>
 #include <stdio.h>
+#include <unistd.h>
 #include "crray.inc.h"
 #include "crray.c"
 
+/*
 void show_arr(struct crray *arr, char *label){
 	printf(">'%s' alloc:%d length:%d\n", label, arr->allocated, arr->length);
 	int i;
@@ -12,13 +14,28 @@ void show_arr(struct crray *arr, char *label){
 		printf("%d= %s\n", i, (char *)value);
 	}
 }
+*/
 
 
 int main(int argc, char **argv){
 
-/*
-	struct crray *arr = crray_init();
+	struct crray *arr = crray_init(sizeof(int));
 	printf("alloc:%d length:%d\n", arr->allocated, arr->length);
+
+    int one = 1;
+    int two = 2;
+	crray_add_inl(arr, &one);
+	crray_add_inl(arr, &two);
+
+    int *r1;
+    int *r2;
+    crray_get_inl(arr, 0, (void *)&r1);
+    crray_get_inl(arr, 1, (void *)&r2);
+    printf("results %d %d\n", *r1, *r2);
+    int *first = arr->items;
+    int *second = arr->items+(arr->esizeof*(arr->length-1));
+    printf("results %d %d\n", *first, *second);
+/*
 
 	char alpha[] = "alpha";
 	char bravo[] = "bravo";
