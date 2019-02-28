@@ -5,7 +5,8 @@ struct crray {
 	int allocated;
     size_t esizeof;
 	char *items;
-    int (*cmp)(void *item, void *search);
+    int (*cmp)(struct crray *arr, void *item, void *search);
+    int (*_pre_cmp)(struct crray *arr, void *item, void *search);
     int (*free)(void *item);
     int (*add_at)(struct crray *arr, void *item, int idx);
     int (*add)(struct crray *arr, void *item);
@@ -17,11 +18,7 @@ struct crray {
     void *(*find)(struct crray *arr, void *search);
 };
 
-int _crray_cmp(void *item, void *search){
-    return strcmp(item, search);
-}
-
-int crray_resize_if_(struct crray *arr, int size){
+int _crray_resize_if(struct crray *arr, int size){
 	int newsize;
 	char *new = NULL;
 	if(arr->allocated < size){
@@ -47,31 +44,8 @@ int crray_resize_if_(struct crray *arr, int size){
 	return arr->allocated;
 }
 
-struct crray *crray_init(size_t esizeof){
-    struct crray *arr = malloc(sizeof(struct crray));
-    if(!arr){
-        fprintf(stderr, "no memory for crray_init");
-    }
-    bzero(arr, sizeof(struct crray));
-	arr->length = 0;
-    arr->esizeof = esizeof;
-	arr->allocated = 0;
-	arr->allocated = crray_resize_if_(arr, arr->esizeof*INITIAL_SIZE);
-    arr->cmp = _crray_cmp;
-    arr->cmp)(void *item, void *search);
-    arr->free)(void *item);
-    arr->add_at = crray_add_at_inline
-    arr->add = crray_add_inline;
-    arr->pop = crray_pop_inline;
-    arr->get = crray_get_inline;
-    arr->empty crray_empty;
-    arr->count = crray_count_inline;
-    arr->idx = crray_idx_inline;
-    arr->find = crray_idx_inline;
-    return arr;
-}
 
-int crray_set_inline(struct crray *arr, void *item, int idx){
+int crray_set(struct crray *arr, void *item, int idx){
 	if(idx < 0 || idx > arr->length){
 		return -1;
 	}
@@ -79,27 +53,27 @@ int crray_set_inline(struct crray *arr, void *item, int idx){
 	return 0;
 }
 
-int crray_add_at_inline(struct crray *arr, void *item, int idx){
+int crray_add_at(struct crray *arr, void *item, int idx){
 	if(idx == -1){
-		return crray_add_at_inline(arr, item, arr->length);
+		return crray_add_at(arr, item, arr->length);
 	}
 	if(idx < 0 || idx > arr->length){
 		return -1;
 	}
-	arr->allocated = crray_resize_if_(arr, arr->esizeof*(arr->length+1));
+	arr->allocated = _crray_resize_if(arr, arr->esizeof*(arr->length+1));
     if(idx != arr->length){
         memcpy(arr->items+(arr->esizeof*(arr->length+1)), arr->items+(arr->esizeof*idx), arr->esizeof*(arr->length-idx));
 	}
-    crray_set_inline(arr, item, idx);
+    crray_set(arr, item, idx);
 	arr->length++;
 	return idx;
 }
 
-int crray_add_inline(struct crray *arr, void *item){
-  	return crray_add_at_inline(arr, item, -1); 
+int crray_add(struct crray *arr, void *item){
+  	return crray_add_at(arr, item, -1); 
 }
 
-int crray_pop_inline(struct crray *arr, int idx, void **result){
+int crray_pop(struct crray *arr, int idx, void **result){
 	if(idx < 0 || idx > arr->length-1){
 		return -1;
 	}
@@ -111,7 +85,7 @@ int crray_pop_inline(struct crray *arr, int idx, void **result){
 	return 0;
 }
 
-int crray_get_inline(struct crray *arr, int idx, void **result){
+int crray_get(struct crray *arr, int idx, void **result){
 	if(idx < 0 || idx > arr->length-1){
         return -1;
 	}
@@ -133,7 +107,7 @@ int crray_count(struct crray *arr, void *search){
     int i;
     int count = 0;
     for(i=0; i < arr->length; i++){
-        if(!arr->cmp(search, &arr->items[i])){
+        if(!arr->_pre_cmp(arr, search, &arr->items[i])){
             count++;
         }
     }
@@ -143,7 +117,7 @@ int crray_count(struct crray *arr, void *search){
 int crray_idx(struct crray *arr, void *search){
     int i;
     for(i=0; i < arr->length; i++){
-        if(!arr->cmp(search, &arr->items[i])){
+        if(!arr->_pre_cmp(arr, search, &arr->items[i])){
             return i;
         }
     }
@@ -156,4 +130,56 @@ void *crray_find(struct crray *arr, void *search){
         return &arr->items[i];
     }
     return NULL;
+}
+
+int _crray_cmp(struct crray *arr, void *item, void *search){
+    return 0;
+}
+
+int _crray_int_cmp(struct crray *arr, void *item, void *search){
+    return *(int *)item - *(int *)search;
+}
+
+int _crray_pre_cmp_passthrough(struct crray *arr, void *item, void *search){
+    return arr->cmp(arr, item, search);
+}
+
+int _crray_prepare_ptr(struct crray *arr, void *item, void *search){
+    return arr->cmp(arr, *(void **)item, *(void **)search);
+}
+
+struct crray *crray_init(size_t esizeof){
+    struct crray *arr = malloc(sizeof(struct crray));
+    if(!arr){
+        fprintf(stderr, "no memory for crray_init");
+    }
+    bzero(arr, sizeof(struct crray));
+	arr->length = 0;
+    arr->esizeof = esizeof;
+	arr->allocated = 0;
+	arr->allocated = _crray_resize_if(arr, arr->esizeof*INITIAL_SIZE);
+    arr->_pre_cmp = _crray_pre_cmp_passthrough;
+    arr->cmp = _crray_cmp;
+    arr->free = NULL;
+    arr->add_at = crray_add_at;
+    arr->add = crray_add;
+    arr->pop = crray_pop;
+    arr->get = crray_get;
+    arr->empty = crray_empty;
+    arr->count = crray_count;
+    arr->idx = crray_idx;
+    arr->find = crray_find;
+    return arr;
+}
+
+struct crray *crray_ptr_init(){
+    struct crray *arr = crray_init(sizeof(void *));
+    arr->_pre_cmp = _crray_prepare_ptr;
+    return arr;
+}
+
+struct crray *crray_int_init(){
+    struct crray *arr = crray_init(sizeof(int));
+    arr->cmp = _crray_int_cmp;
+    return arr;
 }

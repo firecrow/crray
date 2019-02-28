@@ -19,22 +19,31 @@ void show_arr(struct crray *arr, char *label){
 
 int main(int argc, char **argv){
 
-	struct crray *arr = crray_init(sizeof(int));
-	printf("alloc:%d length:%d\n", arr->allocated, arr->length);
+	struct crray *arr = crray_int_init();
 
     int one = 1;
     int two = 2;
-	crray_add_inl(arr, &one);
-	crray_add_inl(arr, &two);
+	arr->add(arr, &one);
+	arr->add(arr, &two);
 
     int *r1;
     int *r2;
-    crray_get_inl(arr, 0, (void *)&r1);
-    crray_get_inl(arr, 1, (void *)&r2);
-    printf("results %d %d\n", *r1, *r2);
-    int *first = arr->items;
-    int *second = arr->items+(arr->esizeof*(arr->length-1));
-    printf("results %d %d\n", *first, *second);
+    arr->get(arr, 0, (void *)&r1);
+    arr->get(arr, 1, (void *)&r2);
+
+    (*r1 == 1) ? printf("pass") : printf("fail");
+    printf(" 1 == 1 set/get\n");
+
+    (*r2 == 2) ? printf("pass") : printf("fail");
+    printf(" 2 == 2 set/get\n");
+
+    int *first = (int *)arr->items;
+    int *second = ((int *)arr->items)+(arr->length-1);
+    (*first == 1) ? printf("pass") : printf("fail");
+    printf(" 1 == 1 items\n");
+
+    (*second == 2) ? printf("pass") : printf("fail");
+    printf(" 2 == 2 items\n");
 /*
 
 	char alpha[] = "alpha";
