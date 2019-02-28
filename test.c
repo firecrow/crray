@@ -4,17 +4,14 @@
 #include "crray.inc.h"
 #include "crray.c"
 
-/*
-void show_arr(struct crray *arr, char *label){
-	printf(">'%s' alloc:%d length:%d\n", label, arr->allocated, arr->length);
+void show_int_arr(struct crray *arr){
 	int i;
 	void *value;
 	for(i=0; i<arr->length; i++){
-		crray_get(arr, i, &value);
-		printf("%d= %s\n", i, (char *)value);
+		arr->get(arr, i, &value);
+		printf("%d=%d\n", i, *(int *)value);
 	}
 }
-*/
 
 
 int main(int argc, char **argv){
@@ -23,14 +20,21 @@ int main(int argc, char **argv){
 
     int one = 1;
     int two = 2;
+    int three = 3;
+    int four = 4;
+    int five = 5;
 	arr->add(arr, &one);
 	arr->add(arr, &two);
 
     int *r1;
     int *r2;
+    int *r3;
+    int *r4;
+    int *r5;
     arr->get(arr, 0, (void *)&r1);
     arr->get(arr, 1, (void *)&r2);
 
+    show_int_arr(arr);
     (*r1 == 1) ? printf("pass") : printf("fail");
     printf(" 1 == 1 set/get\n");
 
@@ -44,6 +48,30 @@ int main(int argc, char **argv){
 
     (*second == 2) ? printf("pass") : printf("fail");
     printf(" 2 == 2 items\n");
+
+
+	arr->add(arr, &four);
+	arr->add(arr, &five);
+    arr->get(arr, 0, (void *)&r1);
+    arr->get(arr, 1, (void *)&r2);
+    arr->get(arr, 2, (void *)&r3);
+    arr->get(arr, 3, (void *)&r4);
+    arr->get(arr, 4, (void *)&r5);
+
+    show_int_arr(arr);
+    (*r1 == 1 && *r2 == 2 && *r3 == 4 && *r4 == 5) ? printf("pass") : printf("fail");
+    printf(" four items set/get\n");
+
+	arr->add_at(arr, &three, 2);
+    arr->get(arr, 0, (void *)&r1);
+    arr->get(arr, 1, (void *)&r2);
+    arr->get(arr, 2, (void *)&r3);
+    arr->get(arr, 3, (void *)&r4);
+    arr->get(arr, 4, (void *)&r5);
+    show_int_arr(arr);
+    (*r1 == 1 && *r2 == 2 && *r3 == 3 && *r4 == 4 && *r5 == 5) ? printf("pass") : printf("fail");
+    printf(" five items add_at\n");
+
 /*
 
 	char alpha[] = "alpha";

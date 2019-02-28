@@ -35,7 +35,7 @@ int _crray_resize_if(struct crray *arr, int size){
 			exit(1);
 		}
 		if(arr->length != 0){
-			memcpy(new, arr->items, arr->esizeof*(arr->length));
+			memmove(new, arr->items, arr->esizeof*(arr->length));
 			free(arr->items);
 		}
 		arr->items = new;
@@ -49,7 +49,7 @@ int crray_set(struct crray *arr, void *item, int idx){
 	if(idx < 0 || idx > arr->length){
 		return -1;
 	}
-    memcpy(arr->items+(arr->esizeof*idx), item, arr->esizeof);
+    memmove(arr->items+(arr->esizeof*idx), item, arr->esizeof);
 	return 0;
 }
 
@@ -62,7 +62,7 @@ int crray_add_at(struct crray *arr, void *item, int idx){
 	}
 	arr->allocated = _crray_resize_if(arr, arr->esizeof*(arr->length+1));
     if(idx != arr->length){
-        memcpy(arr->items+(arr->esizeof*(arr->length+1)), arr->items+(arr->esizeof*idx), arr->esizeof*(arr->length-idx));
+        memmove(arr->items+(arr->esizeof*(idx+1)), arr->items+(arr->esizeof*idx), arr->esizeof*(arr->length-idx));
 	}
     crray_set(arr, item, idx);
 	arr->length++;
@@ -80,7 +80,7 @@ int crray_pop(struct crray *arr, int idx, void **result){
     if(result != NULL){
         *result = &arr->items[idx];
     }
-	memcpy(arr->items+idx, arr->items+idx+1, arr->esizeof*(arr->length-idx));
+	memmove(arr->items+idx, arr->items+idx+1, arr->esizeof*(arr->length-idx));
 	arr->length--;
 	return 0;
 }
