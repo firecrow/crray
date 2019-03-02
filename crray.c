@@ -45,12 +45,19 @@ int _crray_resize_if(struct crray *arr, int size){
 	return arr->allocated;
 }
 
+size_t esize(struct crray *arr, int q){
+    return arr->esizeof*q;
+}
+
+void *eptr(struct crray *arr, int idx){
+    return arr->items+esize(arr, idx);
+}
 
 int crray_set(struct crray *arr, void *item, int idx){
 	if(idx < 0 || idx > arr->length){
 		return -1;
 	}
-    memmove(arr->items+(arr->esizeof*idx), item, arr->esizeof);
+    memmove(eptr(arr, idx), item, arr->esizeof);
 	return 0;
 }
 
@@ -61,9 +68,9 @@ int crray_add_at(struct crray *arr, void *item, int idx){
 	if(idx < 0 || idx > arr->length){
 		return -1;
 	}
-	arr->allocated = _crray_resize_if(arr, arr->esizeof*(arr->length+1));
+	arr->allocated = _crray_resize_if(arr, esize(arr, arr->length+1));
     if(idx != arr->length){
-        memmove(arr->items+(arr->esizeof*(idx+1)), arr->items+(arr->esizeof*idx), arr->esizeof*(arr->length-idx));
+        memmove(eptr(arr, idx+1), eptr(arr, idx), esize(arr, arr->length-idx));
 	}
     crray_set(arr, item, idx);
 	arr->length++;
@@ -79,9 +86,9 @@ int crray_pop(struct crray *arr, int idx, void **result){
 		return -1;
 	}
     void *r = malloc(arr->esizeof);
-    memcpy(r, arr->items+(arr->esizeof*idx), arr->esizeof);
+    memcpy(r, eptr(arr, idx), arr->esizeof);
 	*result = r;
-	memmove(arr->items+(arr->esizeof*idx), arr->items+(arr->esizeof*(idx+1)), arr->esizeof*(arr->length-idx));
+	memmove(eptr(arr, idx), eptr(arr, idx+1), esize(arr, arr->length-idx));
 	arr->length--;
 	return 0;
 }
@@ -90,7 +97,7 @@ int crray_get(struct crray *arr, int idx, void **result){
 	if(idx < 0 || idx > arr->length-1){
         return -1;
 	}
-	*result = arr->items+(arr->esizeof*idx);
+	*result = eptr(arr, idx);
 	return 0;
 }
 
@@ -127,7 +134,6 @@ int crray_idx(struct crray *arr, void *search){
 
 int crray_find(struct crray *arr, void *search, void **result){
     int i = crray_idx(arr, search);
-    printf("i in find %d\n", i);
     if(i != -1){
         *result = arr->items+(arr->esizeof*i);
         return i;
