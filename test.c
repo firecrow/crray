@@ -4,7 +4,8 @@
 #include "crray.inc.h"
 #include "crray.c"
 
-void show_int_arr(struct crray *arr){
+void show_int_arr(struct crray *arr, char *label){
+    printf("--- %s ---\n", label);
 	int i;
 	void *value;
 	for(i=0; i<arr->length; i++){
@@ -13,6 +14,15 @@ void show_int_arr(struct crray *arr){
 	}
 }
 
+int compare_arr(struct crray *a, struct crray *b){
+    int i;
+    for(i=0; i < a->length; i++){
+        if(a->cmp(a->items+(a->esizeof*i), b->items+(b->esizeof*i))){
+            return -1;
+        }
+    }
+    return 0;
+}
 
 int main(int argc, char **argv){
 
@@ -30,6 +40,7 @@ int main(int argc, char **argv){
     int *r3;
     int *r4;
     int *r5;
+    int *rpop;
 
 	arr->add(arr, &one);
 	arr->add(arr, &two);
@@ -37,7 +48,7 @@ int main(int argc, char **argv){
     arr->get(arr, 0, (void *)&r1);
     arr->get(arr, 1, (void *)&r2);
 
-    show_int_arr(arr);
+    show_int_arr(arr, "add/get 2");
     (*r1 == 1) ? printf("pass") : printf("fail");
     printf(" 1 == 1 set/get\n");
 
@@ -60,7 +71,7 @@ int main(int argc, char **argv){
     arr->get(arr, 3, (void *)&r4);
     arr->get(arr, 4, (void *)&r5);
 
-    show_int_arr(arr);
+    show_int_arr(arr, "add/get 5");
     (*r1 == 1 && *r2 == 2 && *r3 == 4 && *r4 == 5) ? printf("pass") : printf("fail");
     printf(" four items set/get\n");
 
@@ -70,7 +81,7 @@ int main(int argc, char **argv){
     arr->get(arr, 2, (void *)&r3);
     arr->get(arr, 3, (void *)&r4);
     arr->get(arr, 4, (void *)&r5);
-    show_int_arr(arr);
+    show_int_arr(arr, "add_at");
     (*r1 == 1 && *r2 == 2 && *r3 == 3 && *r4 == 4 && *r5 == 5) ? printf("pass") : printf("fail");
     printf(" five items add_at\n");
 
@@ -80,7 +91,8 @@ int main(int argc, char **argv){
 
 
     arr->set(arr, (void *)&thirty, 2);
-    show_int_arr(arr);
+    show_int_arr(arr, "set");
+    (*r1 == 1 && *r2 == 2 && *r3 == 3 && *r4 == 4 && *r5 == 5) ? printf("pass") : printf("fail");
     arr->get(arr, 2, (void *)&r3);
     (*r3 == 30) ? printf("pass") : printf("fail");
     printf(" set idx 2 == 30\n");
@@ -90,7 +102,28 @@ int main(int argc, char **argv){
     (*rfind == 2 && idx == 1) ? printf("pass") : printf("fail");
     printf(" find idx 1 == %d and value  2 == %d\n", idx, *rfind);
 
-    /* pop */
+	struct crray *a = crray_int_init();
+	struct crray *b = crray_int_init();
+    a->add(a, &one);
+    a->add(a, &two);
+    a->add(a, &three);
+    a->add(a, &four);
+    show_int_arr(a, "a");
+
+    b->add(b, &one);
+    b->add(b, &two);
+    b->add(b, &four);
+    show_int_arr(b, "b");
+
+    int *vpop;
+    a->pop(a, 2, (void *)&vpop);
+    show_int_arr(a, "after pop");
+    int spop = compare_arr(a, b); 
+    (*vpop == 3 && spop == 0) ? printf("pass") : printf("fail");
+    printf(" pop idx 2 equiv? %d 3 == %d \n", spop, *vpop);
+
+
+
     /* count */
     /* pop many */
     /* crray empty */
