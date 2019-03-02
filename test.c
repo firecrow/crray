@@ -49,7 +49,6 @@ int main(int argc, char **argv){
     (*second == 2) ? printf("pass") : printf("fail");
     printf(" 2 == 2 items\n");
 
-
 	arr->add(arr, &four);
 	arr->add(arr, &five);
     arr->get(arr, 0, (void *)&r1);
@@ -71,6 +70,20 @@ int main(int argc, char **argv){
     show_int_arr(arr);
     (*r1 == 1 && *r2 == 2 && *r3 == 3 && *r4 == 4 && *r5 == 5) ? printf("pass") : printf("fail");
     printf(" five items add_at\n");
+
+    show_int_arr(arr);
+	int idx = arr->idx(arr, &two);
+    (idx == 1) ? printf("pass") : printf("fail");
+    printf(" idx of two is 1 == %d\n", idx);
+
+
+    /* set */
+    /* pop */
+    /* count */
+    /* find */
+    /* pop many */
+    /* crray empty */
+    /* free */
 
 /*
 

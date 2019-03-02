@@ -117,7 +117,7 @@ int crray_count(struct crray *arr, void *search){
 int crray_idx(struct crray *arr, void *search){
     int i;
     for(i=0; i < arr->length; i++){
-        if(!arr->_pre_cmp(arr, search, &arr->items[i])){
+        if(!arr->_pre_cmp(arr, search, arr->items+(arr->esizeof*i))){
             return i;
         }
     }
