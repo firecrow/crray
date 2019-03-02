@@ -23,14 +23,17 @@ int main(int argc, char **argv){
     int three = 3;
     int four = 4;
     int five = 5;
-	arr->add(arr, &one);
-	arr->add(arr, &two);
-
+    int thirty = 30;
+    int idx;
     int *r1;
     int *r2;
     int *r3;
     int *r4;
     int *r5;
+
+	arr->add(arr, &one);
+	arr->add(arr, &two);
+
     arr->get(arr, 0, (void *)&r1);
     arr->get(arr, 1, (void *)&r2);
 
@@ -71,16 +74,24 @@ int main(int argc, char **argv){
     (*r1 == 1 && *r2 == 2 && *r3 == 3 && *r4 == 4 && *r5 == 5) ? printf("pass") : printf("fail");
     printf(" five items add_at\n");
 
-    show_int_arr(arr);
-	int idx = arr->idx(arr, &two);
+	idx = arr->idx(arr, &two);
     (idx == 1) ? printf("pass") : printf("fail");
     printf(" idx of two is 1 == %d\n", idx);
 
 
-    /* set */
+    arr->set(arr, (void *)&thirty, 2);
+    show_int_arr(arr);
+    arr->get(arr, 2, (void *)&r3);
+    (*r3 == 30) ? printf("pass") : printf("fail");
+    printf(" set idx 2 == 30\n");
+
+    int *rfind;
+    idx = arr->find(arr, &two, (void *)&rfind);
+    (*rfind == 2 && idx == 1) ? printf("pass") : printf("fail");
+    printf(" find idx 1 == %d and value  2 == %d\n", idx, *rfind);
+
     /* pop */
     /* count */
-    /* find */
     /* pop many */
     /* crray empty */
     /* free */

@@ -12,10 +12,11 @@ struct crray {
     int (*add)(struct crray *arr, void *item);
     int (*pop)(struct crray *arr, int idx, void **result);
     int (*get)(struct crray *arr, int idx, void **result);
+    int (*set)(struct crray *arr, void *item, int idx);
     void (*empty)(struct crray * arr);
     int (*count)(struct crray *arr, void *search);
     int (*idx)(struct crray *arr, void *search);
-    void *(*find)(struct crray *arr, void *search);
+    int (*find)(struct crray *arr, void *search, void **result);
 };
 
 int _crray_resize_if(struct crray *arr, int size){
@@ -124,12 +125,15 @@ int crray_idx(struct crray *arr, void *search){
     return -1;
 }
 
-void *crray_find(struct crray *arr, void *search){
+int crray_find(struct crray *arr, void *search, void **result){
     int i = crray_idx(arr, search);
+    printf("i in find %d\n", i);
     if(i != -1){
-        return &arr->items[i];
+        *result = arr->items+(arr->esizeof*i);
+        return i;
     }
-    return NULL;
+    *result = NULL;
+    return -1;
 }
 
 int _crray_cmp(struct crray *arr, void *item, void *search){
@@ -165,6 +169,7 @@ struct crray *crray_init(size_t esizeof){
     arr->add = crray_add;
     arr->pop = crray_pop;
     arr->get = crray_get;
+    arr->set = crray_set;
     arr->empty = crray_empty;
     arr->count = crray_count;
     arr->idx = crray_idx;
