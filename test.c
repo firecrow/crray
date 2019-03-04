@@ -24,7 +24,7 @@ int compare_arr(struct crray *a, struct crray *b){
     return 0;
 }
 
-int main(int argc, char **argv){
+int int_tests(){
 
 	struct crray *arr = crray_int_init();
 
@@ -94,7 +94,7 @@ int main(int argc, char **argv){
     /*show_int_arr(arr, "set");*/
     arr->get(arr, 2, (void *)&r3);
     (*r3 == 30) ? printf("pass") : printf("fail");
-    printf(" set idx 2 == 30\n");
+    printf(" set idx 30 == %d\n", *r3);
 
     int *rfind;
     idx = arr->find(arr, &two, (void *)&rfind);
@@ -136,9 +136,11 @@ int main(int argc, char **argv){
     (count_one == 3 && count_two == 1 && count_three == 2 & count_thirty == 0) ? printf("pass") : printf("fail");
     printf(" count tests one 3 == %d two 1 == %d three 2 == %d thirty 0 == %d \n", count_one, count_two, count_three, count_thirty);
 
-    /* pop many */
-    /* crray empty */
-    /* free */
+}
+
+int main(int argc, char **argv){
+    int_tests();
+
 
 /*
 
