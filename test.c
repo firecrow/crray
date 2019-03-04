@@ -14,6 +14,16 @@ void show_int_arr(struct crray *arr, char *label){
 	}
 }
 
+void show_str_arr(struct crray *arr, char *label){
+    printf("--- %s ---\n", label);
+	int i;
+	void *value;
+	for(i=0; i<arr->length; i++){
+		arr->get(arr, i, &value);
+		printf("%d=%s\n", i, (char *)value);
+	}
+}
+
 int compare_arr(struct crray *a, struct crray *b){
     int i;
     for(i=0; i < a->length; i++){
@@ -24,7 +34,7 @@ int compare_arr(struct crray *a, struct crray *b){
     return 0;
 }
 
-int int_tests(){
+void int_tests(){
 
 	struct crray *arr = crray_int_init();
 
@@ -138,8 +148,27 @@ int int_tests(){
 
 }
 
+void ptr_tests(){
+    char *one = "one";
+    char *two = "two";
+    char *three = "three";
+    char *four = "four";
+    char *five = "five";
+
+	struct crray *arr = crray_str_init();
+    arr->add(arr, one);
+    arr->add(arr, two);
+    arr->add(arr, three);
+    arr->add(arr, four);
+    show_str_arr(arr, "strings to five");
+    int idx = arr->idx(arr, three);
+    (idx == 2) ? printf("pass") : printf("fail");
+    printf(" ptr idx 2 == %d \n", idx);
+}
+
 int main(int argc, char **argv){
     int_tests();
+    ptr_tests();
 
 
 /*

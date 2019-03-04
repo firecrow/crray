@@ -6,7 +6,6 @@ struct crray {
     size_t esizeof;
 	char *items;
     int (*cmp)(void *item, void *search);
-    int (*_pre_cmp)(struct crray *arr, void *item, void *search);
     int (*free)(void *item);
     int (*add_at)(struct crray *arr, void *item, int idx);
     int (*add)(struct crray *arr, void *item);
@@ -115,7 +114,7 @@ int crray_count(struct crray *arr, void *search){
     int i;
     int count = 0;
     for(i=0; i < arr->length; i++){
-        if(!arr->_pre_cmp(arr, search, eptr(arr, i))){
+        if(!arr->cmp(search, eptr(arr, i))){
             count++;
         }
     }
@@ -125,7 +124,7 @@ int crray_count(struct crray *arr, void *search){
 int crray_idx(struct crray *arr, void *search){
     int i;
     for(i=0; i < arr->length; i++){
-        if(!arr->_pre_cmp(arr, search, eptr(arr, i))){
+        if(!arr->cmp(search, eptr(arr, i))){
             return i;
         }
     }
@@ -146,16 +145,12 @@ int _crray_cmp(void *item, void *search){
     return 0;
 }
 
+int _crray_str_cmp(void *item, void *search){
+    return strncmp(item, search, 1024);
+}
+
 int _crray_int_cmp(void *item, void *search){
     return *(int *)item - *(int *)search;
-}
-
-int _crray_pre_cmp_passthrough(struct crray *arr, void *item, void *search){
-    return arr->cmp(item, search);
-}
-
-int _crray_prepare_ptr(struct crray *arr, void *item, void *search){
-    return arr->cmp(*(void **)item, *(void **)search);
 }
 
 struct crray *crray_init(size_t esizeof){
@@ -168,7 +163,6 @@ struct crray *crray_init(size_t esizeof){
     arr->esizeof = esizeof;
 	arr->allocated = 0;
 	arr->allocated = _crray_resize_if(arr, arr->esizeof*INITIAL_SIZE);
-    arr->_pre_cmp = _crray_pre_cmp_passthrough;
     arr->cmp = _crray_cmp;
     arr->free = NULL;
     arr->add_at = crray_add_at;
@@ -185,7 +179,12 @@ struct crray *crray_init(size_t esizeof){
 
 struct crray *crray_ptr_init(){
     struct crray *arr = crray_init(sizeof(void *));
-    arr->_pre_cmp = _crray_prepare_ptr;
+    return arr;
+}
+
+struct crray *crray_str_init(){
+    struct crray *arr = crray_init(sizeof(void *));
+    arr->cmp = _crray_str_cmp;
     return arr;
 }
 
