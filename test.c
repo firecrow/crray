@@ -121,9 +121,21 @@ int main(int argc, char **argv){
     (*vpop == 3 && spop == 0) ? printf("pass") : printf("fail");
     printf(" pop idx 2 equiv? %d 3 == %d \n", spop, *vpop);
 
+	a = crray_int_init();
+    a->add(a, &one);
+    a->add(a, &one);
+    a->add(a, &one);
+    a->add(a, &two);
+    a->add(a, &three);
+    a->add(a, &three);
+    a->add(a, &four);
+    int count_one = a->count(a, &one);
+    int count_two = a->count(a, &two);
+    int count_three = a->count(a, &three); 
+    int count_thirty = a->count(a, &thirty); 
+    (count_one == 3 && count_two == 1 && count_three == 2 & count_thirty == 0) ? printf("pass") : printf("fail");
+    printf(" count tests one 3 == %d two 1 == %d three 2 == %d thirty 0 == %d \n", count_one, count_two, count_three, count_thirty);
 
-
-    /* count */
     /* pop many */
     /* crray empty */
     /* free */
