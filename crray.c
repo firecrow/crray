@@ -1,24 +1,40 @@
 static int INITIAL_SIZE = 4;
 
+struct crray_base {
+	int length;
+	int allocated;
+  size_t esizeof;
+	char *items;
+};
+
 struct crray {
 	int length;
 	int allocated;
-    size_t esizeof;
+  size_t esizeof;
 	char *items;
-    int (*cmp)(void *item, void *search);
-    int (*free)(void *item);
-    int (*add_at)(struct crray *arr, void *item, int idx);
-    int (*add)(struct crray *arr, void *item);
-    int (*pop)(struct crray *arr, int idx, void **result);
-    int (*get)(struct crray *arr, int idx, void **result);
-    int (*set)(struct crray *arr, void *item, int idx);
-    void (*empty)(struct crray * arr);
-    int (*count)(struct crray *arr, void *search);
-    int (*idx)(struct crray *arr, void *search);
-    int (*find)(struct crray *arr, void *search, void **result);
+  int (*cmp)(void *item, void *search);
+  int (*free)(void *item);
+  int (*add_at)(struct crray *arr, void *item, int idx);
+  int (*add)(struct crray *arr, void *item);
+  int (*pop)(struct crray *arr, int idx, void **result);
+  int (*get)(struct crray *arr, int idx, void **result);
+  int (*set)(struct crray *arr, void *item, int idx);
+  void (*empty)(struct crray * arr);
+  int (*count)(struct crray *arr, void *search);
+  int (*idx)(struct crray *arr, void *search);
+  int (*find)(struct crray *arr, void *search, void **result);
 };
 
-int _crray_resize_if(struct crray *arr, int size){
+struct crowbuff {
+	int length;
+	int allocated;
+  size_t esizeof;
+	char *content;
+  void (*free)(struct crowbuff *buff);
+  int (*push)(struct crowbuff *buff, char *content, int len);
+};
+
+int _crray_resize_if(struct crray_base *arr, int size){
 	int newsize;
 	char *new = NULL;
 	if(arr->allocated < size){
@@ -29,7 +45,7 @@ int _crray_resize_if(struct crray *arr, int size){
 			newsize = size;
 		}
 		new = (void *)malloc(arr->esizeof*newsize);
-        bzero(new, arr->esizeof*newsize);
+    bzero(new, arr->esizeof*newsize);
 		if(!new){
 			fprintf(stderr, "oops no memory\n");
 			exit(1);
@@ -67,7 +83,7 @@ int crray_add_at(struct crray *arr, void *item, int idx){
 	if(idx < 0 || idx > arr->length){
 		return -1;
 	}
-	arr->allocated = _crray_resize_if(arr, esize(arr, arr->length+1));
+	arr->allocated = _crray_resize_if((struct crray_base *)arr, esize(arr, arr->length+1));
     if(idx != arr->length){
         memmove(eptr(arr, idx+1), eptr(arr, idx), esize(arr, arr->length-idx));
 	}
@@ -162,7 +178,7 @@ struct crray *crray_init(size_t esizeof){
 	arr->length = 0;
     arr->esizeof = esizeof;
 	arr->allocated = 0;
-	arr->allocated = _crray_resize_if(arr, arr->esizeof*INITIAL_SIZE);
+	arr->allocated = _crray_resize_if((struct crray_base *)arr, arr->esizeof*INITIAL_SIZE);
     arr->cmp = _crray_cmp;
     arr->free = NULL;
     arr->add_at = crray_add_at;
@@ -192,4 +208,27 @@ struct crray *crray_int_init(){
     struct crray *arr = crray_init(sizeof(int));
     arr->cmp = _crray_int_cmp;
     return arr;
+}
+
+void crowbuff_free(struct crowbuff *buff){
+  free(buff->content);
+  free(buff);
+}
+
+int crowbuff_push(struct crowbuff *buff, char *content, int len){
+  buff->allocated = _crray_resize_if((struct crray_base *)buff, buff->length+len+1);
+  memcpy(buff->content+buff->length, content, len);
+  buff->length += len;
+  buff->content[buff->length] = '\0';
+  return buff->length;
+}
+
+struct crowbuff *crowbuff_init(){
+  struct crowbuff *buff = malloc(sizeof(struct crowbuff));
+  bzero(buff, sizeof(struct crowbuff));
+  buff->esizeof = 1;
+  buff->allocated = _crray_resize_if((struct crray_base *)buff, INITIAL_SIZE);
+  buff->free = crowbuff_free;
+  buff->push = crowbuff_push;
+  return buff;
 }

@@ -166,9 +166,33 @@ void ptr_tests(){
     printf(" ptr idx 2 == %d \n", idx);
 }
 
+void buff_tests(){
+  char *hi = "hi";
+  char *there = " there";
+  char *hithere = "hi there";
+  char *rest = " long fello with the scraggly beard.";
+  char *sentence = "hi there long fello with the scraggly beard.";
+  struct crowbuff *a = crowbuff_init();
+  a->push(a, hi, strlen(hi));
+  a->push(a, there, strlen(there));
+  if(!strcmp(a->content, hithere))
+    printf("pass");
+  else
+    printf("fail");
+  printf(" hi combined into hi there\n");
+
+  a->push(a, rest, strlen(rest));
+  if(!strcmp(a->content, sentence))
+    printf("pass");
+  else
+    printf("fail");
+  printf(" buff sentence\n");
+}
+
 int main(int argc, char **argv){
     int_tests();
     ptr_tests();
+    buff_tests();
 
 
 /*
