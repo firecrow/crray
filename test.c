@@ -155,7 +155,7 @@ void ptr_tests(){
     char *four = "four";
     char *five = "five";
 
-	struct crray *arr = crray_str_init();
+  	struct crray *arr = crray_str_init();
     arr->add(arr, one);
     arr->add(arr, two);
     arr->add(arr, three);
@@ -164,6 +164,32 @@ void ptr_tests(){
     int idx = arr->idx(arr, three);
     (idx == 2) ? printf("pass") : printf("fail");
     printf(" ptr idx 2 == %d \n", idx);
+
+    char hi[] = "hello";
+    char *back;
+    arr->add(arr, hi);
+    arr->get(arr, 0, &back);
+    strcmp(hi, back) ? printf("fail") : printf("pass");
+    printf(" setting and getting string\n");
+
+  	arr = crray_str_init();
+    char *a = "alpha";
+    char *b = "bravo";
+    char *c = "charlie super duper long and fancy things";
+    arr->add(arr, a);
+    arr->add(arr, b);
+    arr->add(arr, c);
+    arr->get(arr, 0, &back);
+    strcmp(a, back) ? printf("fail") : printf("pass");
+    printf(" setting and getting string (a)\n");
+    arr->get(arr, 1, &back);
+    strcmp(b, back) ? printf("fail") : printf("pass");
+    printf("%s\n", back);
+    printf(" setting and getting string (b)\n");
+    arr->get(arr, 2, &back);
+    strcmp(c, back) ? printf("fail") : printf("pass");
+    printf(" setting and getting string (c) '%s' vs '%s'\n", c, back);
+
 }
 
 void buff_tests(){

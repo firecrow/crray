@@ -72,7 +72,15 @@ int crray_set(struct crray *arr, void *item, int idx){
 	if(idx < 0 || idx > arr->length){
 		return -1;
 	}
-    memmove(eptr(arr, idx), item, arr->esizeof);
+  memmove(eptr(arr, idx), item, arr->esizeof);
+	return 0;
+}
+
+int crray_setptr(struct crray *arr, void *item, int idx){
+	if(idx < 0 || idx > arr->length){
+		return -1;
+	}
+  ((void **)arr->items)[idx] = item;
 	return 0;
 }
 
@@ -87,12 +95,16 @@ int crray_add_at(struct crray *arr, void *item, int idx){
     if(idx != arr->length){
         memmove(eptr(arr, idx+1), eptr(arr, idx), esize(arr, arr->length-idx));
 	}
-    crray_set(arr, item, idx);
+  arr->set(arr, item, idx);
 	arr->length++;
 	return idx;
 }
 
 int crray_add(struct crray *arr, void *item){
+  	return crray_add_at(arr, item, -1); 
+}
+
+int crray_addptr(struct crray *arr, void *item){
   	return crray_add_at(arr, item, -1); 
 }
 
@@ -113,6 +125,14 @@ int crray_get(struct crray *arr, int idx, void **result){
         return -1;
 	}
 	*result = eptr(arr, idx);
+	return 0;
+}
+
+int crray_getptr(struct crray *arr, int idx, void **result){
+	if(idx < 0 || idx > arr->length-1){
+        return -1;
+	}
+	*result = ((void **)arr->items)[idx];
 	return 0;
 }
 
@@ -195,12 +215,18 @@ struct crray *crray_init(size_t esizeof){
 
 struct crray *crray_ptr_init(){
     struct crray *arr = crray_init(sizeof(void *));
+    arr->add = crray_addptr;
+    arr->get = crray_getptr;
+    arr->set = crray_setptr;
     return arr;
 }
 
 struct crray *crray_str_init(){
     struct crray *arr = crray_init(sizeof(void *));
+    arr->add = crray_addptr;
+    arr->get = crray_getptr;
     arr->cmp = _crray_str_cmp;
+    arr->set = crray_setptr;
     return arr;
 }
 
