@@ -258,3 +258,18 @@ struct crowbuff *crowbuff_init(){
   buff->push = crowbuff_push;
   return buff;
 }
+
+int crray_cmparr(struct crray *a, struct crray *b){
+  int i;
+  void *ra, *rb;
+  if(a->length != b->length)
+    return 1;
+  for(i=0; i<a->length;i++){
+    a->get(a, i, &ra);
+    b->get(b, i, &rb);
+    if(a->cmp(ra, rb))
+      return 1;
+  }
+  return 0;
+}
+
