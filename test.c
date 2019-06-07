@@ -149,6 +149,7 @@ void int_tests(){
 }
 
 void ptr_tests(){
+    char *back;
     char *one = "one";
     char *two = "two";
     char *three = "three";
@@ -160,14 +161,14 @@ void ptr_tests(){
     arr->add(arr, two);
     arr->add(arr, three);
     arr->add(arr, four);
-    show_str_arr(arr, "strings to five");
-    printf("arr->esizeof: %d %d\n", arr->esizeof, sizeof(void *));
+    arr->get(arr, 2, (void **)&back);
+    show_str_arr(arr, "strings to four");
+    printf("three '%s'\n", back);
     int idx = arr->idx(arr, three);
     (idx == 2) ? printf("pass") : printf("fail");
     printf(" ptr idx 2 == %d \n", idx);
 
     char hi[] = "hello";
-    char *back;
     arr->add(arr, hi);
     arr->get(arr, 0, &back);
     strcmp(hi, back) ? printf("fail") : printf("pass");
@@ -217,9 +218,13 @@ void buff_tests(){
 }
 
 int main(int argc, char **argv){
+    /*
     int_tests();
+    */
     ptr_tests();
+    /*
     buff_tests();
+    */
 
 
 /*

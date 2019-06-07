@@ -159,8 +159,20 @@ int crray_count(struct crray *arr, void *search){
 
 int crray_idx(struct crray *arr, void *search){
     int i;
+    void *back, *sec;
+    arr->get(arr, 0, &back);
+    printf("inside get '%s'\n", back);
+    void **result = &sec;
+    *result = eptr(arr, 0);
+    printf("inside '%s'\n", *result);
+
+    printf("%p vs %p\n", &back, result);
+    printf("2 %p - %d %d\n", arr->items, (void *)back-(void *)arr->items, (*result)-(void *)arr->items);
+
     for(i=0; i < arr->length; i++){
-        printf("- comparing '%s' vs '%s'\n", search, eptr(arr, i));
+        printf("- comparing %d '%s' vs '%s'\n", i, search, (char *)eptr(arr, i));
+        printf("- comparing raw '%s' vs '%s'\n", search, (char *)arr->items);
+        printf("- comparing +8 '%s' vs '%s'\n", search, (char *)arr->items+8);
         if(!arr->cmp(search, eptr(arr, i))){
             return i;
         }
