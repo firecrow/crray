@@ -15,7 +15,7 @@ void show_int_arr(struct crray *arr, char *label){
 }
 
 void show_str_arr(struct crray *arr, char *label){
-    printf("--- %s ---\n", label);
+  printf("--- %s ---\n", label);
 	int i;
 	void *value;
 	for(i=0; i<arr->length; i++){
@@ -52,8 +52,8 @@ void int_tests(){
     int *r5;
     int *rpop;
 
-	arr->add(arr, &one);
-	arr->add(arr, &two);
+    arr->add(arr, &one);
+    arr->add(arr, &two);
 
     arr->get(arr, 0, (void *)&r1);
     arr->get(arr, 1, (void *)&r2);
@@ -73,8 +73,8 @@ void int_tests(){
     (*second == 2) ? printf("pass") : printf("fail");
     printf(" 2 == 2 items\n");
 
-	arr->add(arr, &four);
-	arr->add(arr, &five);
+    arr->add(arr, &four);
+    arr->add(arr, &five);
     arr->get(arr, 0, (void *)&r1);
     arr->get(arr, 1, (void *)&r2);
     arr->get(arr, 2, (void *)&r3);
@@ -85,7 +85,7 @@ void int_tests(){
     (*r1 == 1 && *r2 == 2 && *r3 == 4 && *r4 == 5) ? printf("pass") : printf("fail");
     printf(" four items set/get\n");
 
-	arr->add_at(arr, &three, 2);
+    arr->add_at(arr, &three, 2);
     arr->get(arr, 0, (void *)&r1);
     arr->get(arr, 1, (void *)&r2);
     arr->get(arr, 2, (void *)&r3);
@@ -95,7 +95,7 @@ void int_tests(){
     (*r1 == 1 && *r2 == 2 && *r3 == 3 && *r4 == 4 && *r5 == 5) ? printf("pass") : printf("fail");
     printf(" five items add_at\n");
 
-	idx = arr->idx(arr, &two);
+    idx = arr->idx(arr, &two);
     (idx == 1) ? printf("pass") : printf("fail");
     printf(" idx of two is 1 == %d\n", idx);
 
@@ -111,8 +111,8 @@ void int_tests(){
     (*rfind == 2 && idx == 1) ? printf("pass") : printf("fail");
     printf(" find idx 1 == %d and value  2 == %d\n", idx, *rfind);
 
-	struct crray *a = crray_int_init();
-	struct crray *b = crray_int_init();
+    struct crray *a = crray_int_init();
+    struct crray *b = crray_int_init();
     a->add(a, &one);
     a->add(a, &two);
     a->add(a, &three);
@@ -131,7 +131,7 @@ void int_tests(){
     (*vpop == 3 && spop == 0) ? printf("pass") : printf("fail");
     printf(" pop idx 2 equiv? %d 3 == %d \n", spop, *vpop);
 
-	a = crray_int_init();
+    a = crray_int_init();
     a->add(a, &one);
     a->add(a, &one);
     a->add(a, &one);
@@ -161,6 +161,7 @@ void ptr_tests(){
     arr->add(arr, three);
     arr->add(arr, four);
     show_str_arr(arr, "strings to five");
+    printf("arr->esizeof: %d %d\n", arr->esizeof, sizeof(void *));
     int idx = arr->idx(arr, three);
     (idx == 2) ? printf("pass") : printf("fail");
     printf(" ptr idx 2 == %d \n", idx);

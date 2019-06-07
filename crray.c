@@ -11,7 +11,7 @@ struct crray {
 	int length;
 	int allocated;
   size_t esizeof;
-	char *items;
+	unsigned char *items;
   int (*cmp)(void *item, void *search);
   int (*free)(void *item);
   int (*add_at)(struct crray *arr, void *item, int idx);
@@ -160,6 +160,7 @@ int crray_count(struct crray *arr, void *search){
 int crray_idx(struct crray *arr, void *search){
     int i;
     for(i=0; i < arr->length; i++){
+        printf("- comparing '%s' vs '%s'\n", search, eptr(arr, i));
         if(!arr->cmp(search, eptr(arr, i))){
             return i;
         }
