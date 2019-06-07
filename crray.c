@@ -237,6 +237,19 @@ struct crray *crray_int_init(){
     return arr;
 }
 
+/* NULL is success */
+void *compare_arr(struct crray *a, struct crray *b){
+  int i;
+  void *ra, *rb;
+  for(i=0; i < a->length;i++){
+    a->get(a, i, &ra);
+    b->get(b, i, &rb);
+    if(a->cmp(ra, rb))
+      return ra;
+  }
+  return NULL;
+}
+
 void crowbuff_free(struct crowbuff *buff){
   free(buff->content);
   free(buff);
