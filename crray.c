@@ -112,8 +112,8 @@ int crray_pop(struct crray *arr, int idx, void **result){
 	if(idx < 0 || idx > arr->length-1){
 		return -1;
 	}
-    void *r = malloc(arr->esizeof);
-    memcpy(r, eptr(arr, idx), arr->esizeof);
+  void *r = malloc(arr->esizeof);
+  memcpy(r, eptr(arr, idx), arr->esizeof);
 	*result = r;
 	memmove(eptr(arr, idx), eptr(arr, idx+1), esize(arr, arr->length-idx));
 	arr->length--;
@@ -196,10 +196,10 @@ struct crray *crray_init(size_t esizeof){
         fprintf(stderr, "no memory for crray_init");
     }
     bzero(arr, sizeof(struct crray));
-	arr->length = 0;
+	  arr->length = 0;
     arr->esizeof = esizeof;
-	arr->allocated = 0;
-	arr->allocated = _crray_resize_if((struct crray_base *)arr, arr->esizeof*INITIAL_SIZE);
+	  arr->allocated = 0;
+	  arr->allocated = _crray_resize_if((struct crray_base *)arr, arr->esizeof*INITIAL_SIZE);
     arr->cmp = _crray_cmp;
     arr->free = NULL;
     arr->add_at = crray_add_at;
@@ -235,19 +235,6 @@ struct crray *crray_int_init(){
     struct crray *arr = crray_init(sizeof(int));
     arr->cmp = _crray_int_cmp;
     return arr;
-}
-
-/* NULL is success */
-void *compare_arr(struct crray *a, struct crray *b){
-  int i;
-  void *ra, *rb;
-  for(i=0; i < a->length;i++){
-    a->get(a, i, &ra);
-    b->get(b, i, &rb);
-    if(a->cmp(ra, rb))
-      return ra;
-  }
-  return NULL;
 }
 
 void crowbuff_free(struct crowbuff *buff){
