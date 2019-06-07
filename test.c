@@ -95,9 +95,11 @@ void int_tests(){
     (*r1 == 1 && *r2 == 2 && *r3 == 3 && *r4 == 4 && *r5 == 5) ? printf("pass") : printf("fail");
     printf(" five items add_at\n");
 
+    /*
     idx = arr->idx(arr, &two);
     (idx == 1) ? printf("pass") : printf("fail");
     printf(" idx of two is 1 == %d\n", idx);
+    */
 
 
     arr->set(arr, (void *)&thirty, 2);
@@ -106,10 +108,12 @@ void int_tests(){
     (*r3 == 30) ? printf("pass") : printf("fail");
     printf(" set idx 30 == %d\n", *r3);
 
+    /*
     int *rfind;
     idx = arr->find(arr, &two, (void *)&rfind);
     (*rfind == 2 && idx == 1) ? printf("pass") : printf("fail");
     printf(" find idx 1 == %d and value  2 == %d\n", idx, *rfind);
+    */
 
     struct crray *a = crray_int_init();
     struct crray *b = crray_int_init();
@@ -217,14 +221,9 @@ void buff_tests(){
 }
 
 int main(int argc, char **argv){
-    /*
     int_tests();
-    */
     ptr_tests();
-    /*
     buff_tests();
-    */
-
 
 /*
 
