@@ -163,11 +163,11 @@ void ptr_tests(){
     arr->add(arr, four);
     arr->get(arr, 2, (void **)&back);
     show_str_arr(arr, "strings to four");
-    printf("three '%s'\n", back);
     int idx = arr->idx(arr, three);
     (idx == 2) ? printf("pass") : printf("fail");
     printf(" ptr idx 2 == %d \n", idx);
 
+  	arr = crray_str_init();
     char hi[] = "hello";
     arr->add(arr, hi);
     arr->get(arr, 0, &back);
@@ -186,7 +186,6 @@ void ptr_tests(){
     printf(" setting and getting string (a)\n");
     arr->get(arr, 1, &back);
     strcmp(b, back) ? printf("fail") : printf("pass");
-    printf("%s\n", back);
     printf(" setting and getting string (b)\n");
     arr->get(arr, 2, &back);
     strcmp(c, back) ? printf("fail") : printf("pass");
