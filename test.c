@@ -95,11 +95,9 @@ void int_tests(){
     (*r1 == 1 && *r2 == 2 && *r3 == 3 && *r4 == 4 && *r5 == 5) ? printf("pass") : printf("fail");
     printf(" five items add_at\n");
 
-    /*
     idx = arr->idx(arr, &two);
     (idx == 1) ? printf("pass") : printf("fail");
     printf(" idx of two is 1 == %d\n", idx);
-    */
 
 
     arr->set(arr, (void *)&thirty, 2);
@@ -108,12 +106,10 @@ void int_tests(){
     (*r3 == 30) ? printf("pass") : printf("fail");
     printf(" set idx 30 == %d\n", *r3);
 
-    /*
     int *rfind;
     idx = arr->find(arr, &two, (void *)&rfind);
     (*rfind == 2 && idx == 1) ? printf("pass") : printf("fail");
     printf(" find idx 1 == %d and value  2 == %d\n", idx, *rfind);
-    */
 
     struct crray *a = crray_int_init();
     struct crray *b = crray_int_init();
@@ -166,7 +162,7 @@ void ptr_tests(){
     arr->add(arr, three);
     arr->add(arr, four);
     arr->get(arr, 2, (void **)&back);
-    show_str_arr(arr, "strings to four");
+    /*show_str_arr(arr, "strings to four");*/
     int idx = arr->idx(arr, three);
     (idx == 2) ? printf("pass") : printf("fail");
     printf(" ptr idx 2 == %d \n", idx);
@@ -174,7 +170,7 @@ void ptr_tests(){
   	arr = crray_str_init();
     char hi[] = "hello";
     arr->add(arr, hi);
-    arr->get(arr, 0, &back);
+    arr->get(arr, 0, (void **)&back);
     strcmp(hi, back) ? printf("fail") : printf("pass");
     printf(" setting and getting string\n");
 
@@ -185,13 +181,13 @@ void ptr_tests(){
     arr->add(arr, a);
     arr->add(arr, b);
     arr->add(arr, c);
-    arr->get(arr, 0, &back);
+    arr->get(arr, 0, (void **)&back);
     strcmp(a, back) ? printf("fail") : printf("pass");
     printf(" setting and getting string (a)\n");
-    arr->get(arr, 1, &back);
+    arr->get(arr, 1, (void **)&back);
     strcmp(b, back) ? printf("fail") : printf("pass");
     printf(" setting and getting string (b)\n");
-    arr->get(arr, 2, &back);
+    arr->get(arr, 2,(void **)&back);
     strcmp(c, back) ? printf("fail") : printf("pass");
     printf(" setting and getting string (c) '%s' vs '%s'\n", c, back);
 

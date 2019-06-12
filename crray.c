@@ -159,6 +159,16 @@ int crray_count(struct crray *arr, void *search){
 
 int crray_idx(struct crray *arr, void *search){
     int i;
+    for(i=0; i < arr->length; i++){
+        if(!arr->cmp(search, eptr(arr, i))){
+            return i;
+        }
+    }
+    return -1;
+}
+
+int crray_ptr_idx(struct crray *arr, void *search){
+    int i;
     void **item;
     for(i=0; i < arr->length; i++){
         item = eptr(arr, i);
@@ -220,6 +230,7 @@ struct crray *crray_ptr_init(){
     arr->add = crray_addptr;
     arr->get = crray_getptr;
     arr->set = crray_setptr;
+    arr->idx = crray_ptr_idx;
     return arr;
 }
 
@@ -229,6 +240,7 @@ struct crray *crray_str_init(){
     arr->get = crray_getptr;
     arr->cmp = _crray_str_cmp;
     arr->set = crray_setptr;
+    arr->idx = crray_ptr_idx;
     return arr;
 }
 
