@@ -48,4 +48,5 @@ int main(){
     arr->length, "");
   handle_case(arr->alloc_length == 8, "alloc size 8", 
     arr->alloc_length, "");
+  printf("\x1b[0m");
 }
