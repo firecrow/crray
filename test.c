@@ -49,4 +49,19 @@ int main(){
   handle_case(arr->alloc_length == 8, "alloc size 8", 
     arr->alloc_length, "");
   printf("\x1b[0m");
+
+  arr = ptrarray_alloc(1);
+  arr_push(arr, (struct abstract *)alpha, -1);
+  arr_push(arr, (struct abstract *)bravo, -1);
+  arr_push(arr, (struct abstract *)charlie, 1);
+  print_out(arr);
+  handle_case(arr->length == 3, "after insert idx1 length 3", 
+    arr->length, "");
+
+  handle_case(arr->content[0] == alpha, "first elem is first", 
+    arr->length, arr->content[0]);
+  handle_case(arr->content[1] == charlie, "thrd elem elem is second", 
+    arr->length, arr->content[1]);
+  handle_case(arr->content[2] == bravo, "second elem elem is third", 
+    arr->length, arr->content[2]);
 }

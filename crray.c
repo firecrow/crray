@@ -34,8 +34,15 @@ void arr_push(struct ptrarray *arr, struct abstract *obj, int idx){
         arr->alloc_length = arr->alloc_length*2;
         xokptr(arr->content = realloc(arr->content, arr->alloc_length*sizeof(void *)));
     }
+    printf("void*size:%d idx:%d to:%d from:%d size:%d\n", 
+        sizeof(void*), 
+        idx == -1 ? arr->length : idx,
+        arr->content-arr->content+(idx+1), 
+        arr->content-arr->content+idx,
+        (arr->length-idx)*sizeof(void*)
+        );
     if(idx == -1) idx = arr->length;
-    else memmove(arr->content[idx+1], arr->content[idx], arr->length-idx);
+    else memmove(arr->content+(idx+1), arr->content+idx, (arr->length-idx)*sizeof(void*));
     /*arr->content[idx] = ref_incr(obj);*/
     arr->content[idx] = obj;
     arr->length++;
