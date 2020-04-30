@@ -13,7 +13,7 @@ void handle_case(int pass_fail, char *msg, int val, char *example){
   }else{
     printf("\x1b[32mFAIL:");
   }
-  printf("%s val:%d, example:%s\n", msg, val, example);
+  printf("%s val:%d, example:%s\x1b[0m\n", msg, val, example);
 }
 
 void print_out(struct ptrarray *arr){
@@ -64,4 +64,16 @@ int main(){
     arr->length, arr->content[1]);
   handle_case(arr->content[2] == bravo, "second elem elem is third", 
     arr->length, arr->content[2]);
+
+  arr_push(arr, (struct abstract *)delta, -1);
+  arr_push(arr, (struct abstract *)echo, -1);
+  arr_push(arr, (struct abstract *)foxtrot, -1);
+  arr_push(arr, (struct abstract *)golf, -1);
+  print_out(arr);
+  printf("remove 3\n");
+  arr_remove(arr, 3);
+  print_out(arr);
+  printf("remove 0\n");
+  arr_remove(arr, 0);
+  print_out(arr);
 }

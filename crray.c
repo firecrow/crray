@@ -48,7 +48,7 @@ void arr_push(struct ptrarray *arr, struct abstract *obj, int idx){
     arr->length++;
 }
 
-void arr_pop(struct ptrarray *arr, struct abstract *obj, int idx){
-    memmove(arr->content[idx], arr->content[idx+1], arr->length-idx);
+void arr_remove(struct ptrarray *arr, int idx){
+    memmove(arr->content+idx, arr->content+(idx+1), (arr->length-idx)*sizeof(void *));
     arr->length--;
 }
