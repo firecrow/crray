@@ -1,15 +1,15 @@
 #define BLOCK_SIZE 4 
 
-struct ptrarray {
+typedef struct crrray {
     struct base base;
     enum classes generic;
     void **content;
     size_t length;
     size_t alloc_length;
-};
+} Crray;
 
-void ptrarray_free(void *_arr){
-    struct ptrarray *arr = (struct ptrarray *)_arr;
+void crray_free(void *_arr){
+    Crray *arr = (Crray *)_arr;
     int i; 
     for(i=0; i< arr->length; i++){
         ref_decr(arr->content[i]);
@@ -17,19 +17,19 @@ void ptrarray_free(void *_arr){
     free(arr);
 }
 
-struct ptrarray *ptrarray_alloc(size_t initial_size){
-    struct ptrarray *arr;
-    xokptr(arr = malloc(sizeof(struct ptrarray)));
-    bzero(arr, sizeof(struct ptrarray));
+Crray *crray_alloc(size_t initial_size){
+    Crray *arr;
+    xokptr(arr = malloc(sizeof(Crray)));
+    bzero(arr, sizeof(Crray));
     if(initial_size < BLOCK_SIZE) initial_size = BLOCK_SIZE;
     xokptr(arr->content = malloc(initial_size*sizeof(void *)));
     arr->alloc_length = initial_size;
     arr->base.class = CLASS_PTRARRAY;
-    arr->base.free = ptrarray_free;
+    arr->base.free = crray_free;
     return arr;
 }
 
-void arr_push(struct ptrarray *arr, struct abstract *obj, int idx){
+void crray_push(Crray *arr, struct abstract *obj, int idx){
     if(arr->length+1 > arr->alloc_length){
         arr->alloc_length = arr->alloc_length*2;
         xokptr(arr->content = realloc(arr->content, arr->alloc_length*sizeof(void *)));
@@ -48,8 +48,8 @@ void arr_push(struct ptrarray *arr, struct abstract *obj, int idx){
     arr->length++;
 }
 
-void arr_remove(struct ptrarray *arr, int idx){
+void crray_remove(Crray *arr, int idx){
+    ref_decr(arr->content[idx]);
     memmove(arr->content+idx, arr->content+(idx+1), (arr->length-idx)*sizeof(void *));
-    /* arr->base.free(arr) */
     arr->length--;
 }
