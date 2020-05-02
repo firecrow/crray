@@ -1,8 +1,8 @@
-#define CLASSES_PTRARRAY 13
 #define BLOCK_SIZE 4 
 
 struct ptrarray {
     struct base base;
+    enum classes generic;
     void **content;
     size_t length;
     size_t alloc_length;
@@ -24,7 +24,7 @@ struct ptrarray *ptrarray_alloc(size_t initial_size){
     if(initial_size < BLOCK_SIZE) initial_size = BLOCK_SIZE;
     xokptr(arr->content = malloc(initial_size*sizeof(void *)));
     arr->alloc_length = initial_size;
-    arr->base.class = CLASSES_PTRARRAY;
+    arr->base.class = CLASS_PTRARRAY;
     arr->base.free = ptrarray_free;
     return arr;
 }
