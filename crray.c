@@ -53,3 +53,35 @@ void crray_remove(Crray *arr, int idx){
     memmove(arr->content+idx, arr->content+(idx+1), (arr->length-idx)*sizeof(void *));
     arr->length--;
 }
+
+struct crray *split(Counted *str, Counted *sep){
+    char *p  = str->data;
+    char *b  = p;
+    char *s = sep->data;
+    struct crray *arr = arr_alloc();
+    while(p-str->data < str->length){
+        if(*p == *s) s++;
+        else s = sep->data;
+        if(s-sep->data == sep->lenth){
+            arr_push(arr, counted_alloc(b, p-b));
+            b = p;
+            s = sep->data;
+        }
+        p++;
+    }
+    if(b != p){
+        arr_push(arr, counted_alloc(b, p-b));
+    }
+    return arr;
+}
+
+Counted *join(struct crray *arr){
+    Counted *c = clone(arr[0]);
+    Counted *y;
+    int i = 0;
+    for(i; i< arr->length; i++) { 
+        y = (Counted *)arr->content[i];
+        counted_push(c, y->data, y->length);
+    }
+    return c;
+}
