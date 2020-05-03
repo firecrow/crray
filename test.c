@@ -16,6 +16,15 @@ void print_out(Crray *arr){
   }
 }
 
+void print_out_counted(Crray *arr){
+  printf("-------- start -------------\n");
+  for(int i=0;i<arr->length;i++){
+    Counted *c = arr->content[i];
+    write(1, c->data, c->length); 
+    write(1, "\n", 1); 
+  }
+}
+
 int main(){
   Crray *arr = crray_alloc(1);
   char alpha[]="alcahol is nice";
@@ -68,4 +77,44 @@ int main(){
   printf("remove 0\n");
   crray_remove(arr, 0);
   print_out(arr);
+
+  arr = crray_alloc(0);
+  crray_push(arr, (struct abstract *)counted_from_cstr("apple"), -1);
+  crray_push(arr, (struct abstract *)counted_from_cstr("bananna"), -1);
+  crray_push(arr, (struct abstract *)counted_from_cstr("carrot"), -1);
+  Counted *sep = counted_from_cstr(", ");
+
+  Counted *out = join(arr, sep);
+  char join_out[] = "apple, bananna, carrot";
+  int out_r = strcmp(join_out, out->data);
+  handle_case(out_r == 0, "join results", out_r, "");
+
+  Crray *splitout = split(counted_from_cstr("./usr/../local/../this/../../is/../rediculous"), counted_from_cstr("../"));
+  handle_case(splitout->length == 6, "split by ../ results ", splitout->length, "");
+
+  out_r = strcmp("./usr/", ((Counted *)splitout->content[0])->data);
+  handle_case(out_r == 0, "frst split results ", out_r, "");
+
+  out_r = strcmp("local/", ((Counted *)splitout->content[1])->data);
+  handle_case(out_r == 0, "second split results ", out_r, "");
+
+  out_r = strcmp("this/", ((Counted *)splitout->content[2])->data);
+  handle_case(out_r == 0, "third split results ", out_r, "");
+
+  handle_case(((Counted *)splitout->content[3])->length == 0, "fourth split results ", ((Counted *)splitout->content[3])->length, "");
+
+  out_r = strcmp("is/", ((Counted *)splitout->content[4])->data);
+  handle_case(out_r == 0, "fifth split results ", out_r, "");
+
+  out_r = strcmp("rediculous", ((Counted *)splitout->content[5])->data);
+  handle_case(out_r == 0, "sixth split results ", out_r, "");
+
+  splitout = split(counted_from_cstr("one/two/three"), counted_from_cstr("/"));
+  print_out_counted(splitout);
+  out_r = strcmp("one", ((Counted *)splitout->content[0])->data);
+  handle_case(out_r == 0, "frst simple / split results ", out_r, "");
+  out_r = strcmp("two", ((Counted *)splitout->content[1])->data);
+  handle_case(out_r == 0, "frst simple / split results ", out_r, "");
+  out_r = strcmp("three", ((Counted *)splitout->content[2])->data);
+  handle_case(out_r == 0, "frst simple / split results ", out_r, "");
 }

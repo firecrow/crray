@@ -53,14 +53,13 @@ Crray *split(Counted *str, Counted *sep){
     char *s = sep->data;
     Crray *arr = crray_alloc(0);
     while(p-str->data < str->length){
-        if(*p == *s) s++;
-        else s = sep->data;
+        if(*p++ == *s){ s++;
+        } else s = sep->data;
         if(s-sep->data == sep->length){
-            crray_push(arr, (struct abstract *)counted_alloc(b, p-b), -1);
+            crray_push(arr, (struct abstract *)counted_alloc(b, p-b-sep->length), -1);
             b = p;
             s = sep->data;
         }
-        p++;
     }
     if(b != p){
         crray_push(arr, (struct abstract *)counted_alloc(b, p-b), -1);
@@ -68,11 +67,12 @@ Crray *split(Counted *str, Counted *sep){
     return arr;
 }
 
-Counted *join(Crray *arr){
+Counted *join(Crray *arr, Counted *sep){
     Counted *c = clone((Counted *)arr->content[0]);
     Counted *y;
-    for(int i = 0; i< arr->length; i++) { 
+    for(int i = 1; i< arr->length; i++) { 
         y = (Counted *)arr->content[i];
+        counted_push(c, sep->data, sep->length);
         counted_push(c, y->data, y->length);
     }
     return c;
