@@ -35,16 +35,16 @@ int main(){
   char foxtrot[]="freedom is over rated";
   char golf[]="green tomatoes and ham";
 
-  crray_push(arr, (struct abstract *)alpha, -1);
+  crray_push(arr, (Abs *)alpha, -1);
   handle_case(arr->length == 1, "first item has length 1", 
     arr->length, "");
   handle_case(arr->alloc_length == 4, "alloc size 4", 
     arr->alloc_length, "");
 
-  crray_push(arr, (struct abstract *)bravo, -1);
-  crray_push(arr, (struct abstract *)charlie, -1);
-  crray_push(arr, (struct abstract *)delta, -1);
-  crray_push(arr, (struct abstract *)echo, -1);
+  crray_push(arr, (Abs *)bravo, -1);
+  crray_push(arr, (Abs *)charlie, -1);
+  crray_push(arr, (Abs *)delta, -1);
+  crray_push(arr, (Abs *)echo, -1);
   handle_case(arr->length == 5, "fifth item has length 5", 
     arr->length, "");
   handle_case(arr->alloc_length == 8, "alloc size 8", 
@@ -52,9 +52,9 @@ int main(){
   printf("\x1b[0m");
 
   arr = crray_alloc(1);
-  crray_push(arr, (struct abstract *)alpha, -1);
-  crray_push(arr, (struct abstract *)bravo, -1);
-  crray_push(arr, (struct abstract *)charlie, 1);
+  crray_push(arr, (Abs *)alpha, -1);
+  crray_push(arr, (Abs *)bravo, -1);
+  crray_push(arr, (Abs *)charlie, 1);
   print_out(arr);
   handle_case(arr->length == 3, "after insert idx1 length 3", 
     arr->length, "");
@@ -66,10 +66,10 @@ int main(){
   handle_case(arr->content[2] == bravo, "second elem elem is third", 
     arr->length, arr->content[2]);
 
-  crray_push(arr, (struct abstract *)delta, -1);
-  crray_push(arr, (struct abstract *)echo, -1);
-  crray_push(arr, (struct abstract *)foxtrot, -1);
-  crray_push(arr, (struct abstract *)golf, -1);
+  crray_push(arr, (Abs *)delta, -1);
+  crray_push(arr, (Abs *)echo, -1);
+  crray_push(arr, (Abs *)foxtrot, -1);
+  crray_push(arr, (Abs *)golf, -1);
   print_out(arr);
   printf("remove 3\n");
   crray_remove(arr, 3);
@@ -79,9 +79,9 @@ int main(){
   print_out(arr);
 
   arr = crray_alloc(0);
-  crray_push(arr, (struct abstract *)counted_from_cstr("apple"), -1);
-  crray_push(arr, (struct abstract *)counted_from_cstr("bananna"), -1);
-  crray_push(arr, (struct abstract *)counted_from_cstr("carrot"), -1);
+  crray_push(arr, (Abs *)counted_from_cstr("apple"), -1);
+  crray_push(arr, (Abs *)counted_from_cstr("bananna"), -1);
+  crray_push(arr, (Abs *)counted_from_cstr("carrot"), -1);
   Counted *sep = counted_from_cstr(", ");
 
   Counted *out = join(arr, sep);

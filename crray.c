@@ -29,7 +29,7 @@ Crray *crray_alloc(size_t initial_size){
     return arr;
 }
 
-void crray_push(Crray *arr, struct abstract *obj, int idx){
+void crray_push(Crray *arr, Abs *obj, int idx){
     if(arr->length+1 > arr->alloc_length){
         arr->alloc_length = arr->alloc_length*2;
         xokptr(arr->content = realloc(arr->content, arr->alloc_length*sizeof(void *)));
@@ -56,13 +56,13 @@ Crray *split(Counted *str, Counted *sep){
         if(*p++ == *s){ s++;
         } else s = sep->data;
         if(s-sep->data == sep->length){
-            crray_push(arr, (struct abstract *)counted_alloc(b, p-b-sep->length), -1);
+            crray_push(arr, (Abs *)counted_alloc(b, p-b-sep->length), -1);
             b = p;
             s = sep->data;
         }
     }
     if(b != p){
-        crray_push(arr, (struct abstract *)counted_alloc(b, p-b), -1);
+        crray_push(arr, (Abs *)counted_alloc(b, p-b), -1);
     }
     return arr;
 }
