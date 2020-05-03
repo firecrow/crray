@@ -34,13 +34,6 @@ void crray_push(Crray *arr, struct abstract *obj, int idx){
         arr->alloc_length = arr->alloc_length*2;
         xokptr(arr->content = realloc(arr->content, arr->alloc_length*sizeof(void *)));
     }
-    printf("void*size:%d idx:%d to:%d from:%d size:%d\n", 
-        sizeof(void*), 
-        idx == -1 ? arr->length : idx,
-        arr->content-arr->content+(idx+1), 
-        arr->content-arr->content+idx,
-        (arr->length-idx)*sizeof(void*)
-        );
     if(idx == -1) idx = arr->length;
     else memmove(arr->content+(idx+1), arr->content+idx, (arr->length-idx)*sizeof(void*));
     /*arr->content[idx] = ref_incr(obj);*/
@@ -54,32 +47,31 @@ void crray_remove(Crray *arr, int idx){
     arr->length--;
 }
 
-struct crray *split(Counted *str, Counted *sep){
+Crray *split(Counted *str, Counted *sep){
     char *p  = str->data;
     char *b  = p;
     char *s = sep->data;
-    struct crray *arr = arr_alloc();
+    Crray *arr = crray_alloc(0);
     while(p-str->data < str->length){
         if(*p == *s) s++;
         else s = sep->data;
-        if(s-sep->data == sep->lenth){
-            arr_push(arr, counted_alloc(b, p-b));
+        if(s-sep->data == sep->length){
+            crray_push(arr, (struct abstract *)counted_alloc(b, p-b), -1);
             b = p;
             s = sep->data;
         }
         p++;
     }
     if(b != p){
-        arr_push(arr, counted_alloc(b, p-b));
+        crray_push(arr, (struct abstract *)counted_alloc(b, p-b), -1);
     }
     return arr;
 }
 
-Counted *join(struct crray *arr){
-    Counted *c = clone(arr[0]);
+Counted *join(Crray *arr){
+    Counted *c = clone((Counted *)arr->content[0]);
     Counted *y;
-    int i = 0;
-    for(i; i< arr->length; i++) { 
+    for(int i = 0; i< arr->length; i++) { 
         y = (Counted *)arr->content[i];
         counted_push(c, y->data, y->length);
     }

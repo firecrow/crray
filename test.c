@@ -5,26 +5,19 @@
 #include <unistd.h>
 #include "../crowx/crowx.c"
 #include "../poly/poly.c"
+#include "../tested/tested.c"
+#include "../counted/counted.c"
 #include "crray.c"
 
-void handle_case(int pass_fail, char *msg, int val, char *example){
-  if(pass_fail){
-    printf("\x1b[32mPASS:");
-  }else{
-    printf("\x1b[32mFAIL:");
-  }
-  printf("%s val:%d, example:%s\x1b[0m\n", msg, val, example);
-}
-
-void print_out(struct ptrarray *arr){
+void print_out(Crray *arr){
   printf("-------- start -------------\n");
-  int i;
-  for(i=0;i<arr->length;i++){
+  for(int i=0;i<arr->length;i++){
     printf("%d:'%s'\n", i, arr->content[i]);
   }
 }
 
 int main(){
+    /*
   struct ptrarray *arr = ptrarray_alloc(1);
   char alpha[]="alcahol is nice";
   char bravo[]="beetles are nice and crunchy";
@@ -76,4 +69,5 @@ int main(){
   printf("remove 0\n");
   arr_remove(arr, 0);
   print_out(arr);
+  */
 }
