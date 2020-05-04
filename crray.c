@@ -1,3 +1,4 @@
+/* copyright 2020 firecrow silvernight, licensed under the wtfpl see LICENSE file */
 #define BLOCK_SIZE 4 
 
 typedef struct crrray {
@@ -15,6 +16,14 @@ static void ctl_crray_free(void *_arr){
         ctl_ref_decr(arr->content[i]);
     }
     free(arr);
+}
+
+Crray *ctl_crray_incr(Crray *crray){
+    return (Crray *)ctl_ref_incr((CtlAbs *)crray);
+}
+
+Crray *ctl_crray_decr(Crray *crray){
+    return (Crray *)ctl_ref_decr((CtlAbs *)crray);
 }
 
 Crray *ctl_crray_alloc(size_t initial_size){
