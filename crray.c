@@ -85,3 +85,15 @@ CtlCounted *ctl_join(Crray *arr, CtlCounted *sep){
     }
     return c;
 }
+
+void ctl_crray_sort(Crray *arr, int (*cmp)(CtlAbs *a, CtlAbs *b) ){
+    ;
+}
+
+Crray *ctl_crray_filter(Crray *arr, int (*cmp)(CtlAbs *a, CtlAbs *b) ){
+    ;
+}
+
+CtlAbs *ctl_crray_find(Crray *arr, CtlAbs *needle, int (*cmp)(CtlAbs *a, CtlAbs *b) ){
+    ;
+}
