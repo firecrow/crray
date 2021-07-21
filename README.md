@@ -1,6 +1,2 @@
-# Crray
-
-A dynamically scaling pointer array.
-
-This utility dynamically scales in memory to hold a series of pointers, much
-like an array in other high level languages that suppors push and remove.
+CRR is a memory auto expanding string framework, it also has a pointer array
+variant (CrrPtr) which supports pop and push on any indecie.
