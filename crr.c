@@ -81,6 +81,7 @@ void *crrptr_get(struct crrptr *r, int idx){
     return *(r->data+idx);
 }
 
+/* only for debugging purposes on character data */
 void crrptr_print(struct crrptr *c){
     int i;
     for(i=0; i<c->length; i++){
