@@ -20,6 +20,15 @@
  * SOFTWARE.
  */
 
+#define min(x,y) (((x) < (y)) ? (x) : (y))
+#define max(x,y) (((x) > (y)) ? (x) : (y))
+
+struct crr {
+    int allocated;
+    int length;
+    char *data;
+};
+
 struct crrptr {
     int allocated;
     int length;
@@ -27,11 +36,12 @@ struct crrptr {
 };
 
 struct crrptr *crrptr_alloc(){
-    struct crr *r = malloc(sizeof(struct crrptr));
+    struct crrptr *r = malloc(sizeof(struct crrptr));
     if(!r) exit(123);
     bzero(r, sizeof(struct crrptr));
     r->data = malloc(16*sizeof(void *));
     r->allocated = 16;
+    return r;
 }
 
 int crrptr_insert(struct crrptr *r, void *data, int idx){
@@ -94,9 +104,10 @@ struct crr *crr_alloc(){
     if(!r) exit(123);
     bzero(r, sizeof(struct crr));
     r->data = malloc(16);
+    r->data[0] = '\0';
     r->allocated = 16;
+    return r;
 }
-
 
 int crr_push(struct crr *r, char *data, int length){
     int needed = r->length+length; 
@@ -133,6 +144,36 @@ int crr_cmp_cstr(struct crr *a, char *b){
     return strncmp(a->data, b, max(a->length, strlen(b)));
 }
 
+void crr_lines_from_fd(int fd, struct read_progress *progress, struct crr *(*process)(struct crr *crr)){
+    struct read_progress *p = progress;
+    char c;
+    int i;
+    struct crr *new;
+    while(1){
+        /*
+        while(1){
+            len = read(fd, &(p->buff), FCLFPLAY_BUFF_SIZE); 
+            p->seglen = 0;
+            c = &(p->buff);
+            i = 0;
+            while(i++ < p->len && *c++ != '\n')
+                p->seglen++;
+            crr_push(p->crr, &(p->buff), p->seglen);
+        }
+        */
+        if(p->seglen != p->len){
+            if(process){
+                new = process(p->crr);
+                if(new){
+                    p->crr = new;
+                }
+            }
+            crrptr_insert(p->cptr, p->crr, -1); 
+            p->crr = crr_alloc();
+            crr_push(p->crr, p->buff+p->seglen, p->len-p->seglen);
+        }
+    }
+}
 
 void crr_free(struct crr *r){
     free(r->data);
